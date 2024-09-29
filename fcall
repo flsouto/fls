@@ -17,8 +17,10 @@ switch($ext){
     case 'php':
         require $file;
         $func = str_replace(".$ext","",$file);
-        echo $func(...array_slice($argv,2));
+        $args = array_map(fn($arg) => json_decode($arg,true), array_slice($argv,2));
+        echo $func(...$args);
     break;
     default:
-        die("No funcall handler for file: $file\n");
+        echo "No fcall handler for file: $file\n";
+        exit(1);
 }
