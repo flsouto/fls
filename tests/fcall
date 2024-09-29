@@ -1,0 +1,7 @@
+
+expect "$(fcall dummy_function \"dummy_arg1\")" "string(10) \"dummy_arg1\""
+
+expect "$(fcall dummy_function '{"k":1}')" "array(1) {
+  [\"k\"]=>
+  int(1)
+}"
