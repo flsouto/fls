@@ -1,0 +1,4 @@
+#!/bin/bash
+
+sudo bash -c "openvpn --config $1 --auth-user-pass <(echo -e \"$2\n$3\")"
+

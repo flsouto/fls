@@ -1,0 +1,15 @@
+function ali {
+
+    [[ -z $1 ]] && echo "alias name not provided" && exit;
+    [[ -z $2 ]] && echo "alias definition not provided" && exit;
+
+    unset -f $1
+    sed -i "/function $1/d" ~/.bashrc
+
+    func="function $1 { $2; }"
+    echo $func >> ~/.bashrc;
+
+    eval $func
+}
+
+[[ "$1" -eq 'install' ]] && head $0 -n -2 >> ~/.bashrc;
