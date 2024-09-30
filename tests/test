@@ -7,9 +7,12 @@ function expect {
     fi;
 }
 
-if [[ -x ./$1 ]]
+ext="${1##*.}"
+
+
+if [[ $ext == "php" ]]
 then
-    ./$1
+    php ./test.php $1
 else
     . ./$1
 fi
