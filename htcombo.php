@@ -1,16 +1,16 @@
 <?php
 
-require_once('htattrs.php');
+require_once(__DIR__.'/htattrs.php');
+require_once(__DIR__.'/htag.php');
 
 function htcombo($attrs = []){
     $value = $attrs['value']??null;
     $options = $attrs['options']??[];
     unset($attrs['value'],$attrs['options']);
-    $attrs = htattrs($attrs);
-    echo "<select $attrs>";
+    $htopts = [];
     foreach($options as $label => $id){
         $selected = $id == $value ? ' selected' : '';
-        echo "<option value=\"$id\"$selected>$label</option>";
+        $htopts[] = htag('option',['value'=>$id, 'selected'=>$id==$value], $label);
     }
-    echo "</select>";
+    return htag('select', $attrs, $htopts);
 };

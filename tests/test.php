@@ -25,6 +25,18 @@ function assert_file_exists($file){
     }
 }
 
+function assert_contains($content, $substr){
+    if(!stristr($content, $substr)){
+        _error("Failed checking that '$content' contains '$substr'");
+    }
+}
+
+function assert_not_contains($content, $substr){
+    if(stristr($content, $substr)){
+        _error("Failed checking that '$content' does not contain '$substr'");
+    }
+}
+
 function expect($a, $b){
     if($a != $b){
         _error("Expected $a to be $b");
