@@ -8,3 +8,6 @@ function expect {
 }
 
 . ./$1
+
+
+echo OK
