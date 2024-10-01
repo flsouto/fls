@@ -1,2 +1,2 @@
 #!/bin/bash
-grep -RI --exclude-dir node_modules --exclude-dir .git -i $1 $2;
+grep -RI --exclude-dir node_modules --exclude-dir .git -i "$1" "$2";
