@@ -1,0 +1,2 @@
+#!/bin/bash
+echo ~/Downloads/$(ls ~/Downloads -tp | head -n 1)
