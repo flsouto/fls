@@ -1,7 +1,6 @@
 <?php
 
 $form = htform([
-    'data' => $_REQUEST,
     'method' => 'POST',
     'button' => 'Register',
     'data' => [
@@ -25,6 +24,9 @@ $form = htform([
     'button_attrs' => ['onclick'=>'jsfunc()']
 ]);
 
+expose($form);
+
+assert_contains($form, 'name="email"');
 assert_contains($form, 'Your Name');
 assert_contains($form, 'type="email"');
 assert_contains($form, 'value="test@domain.com"');
@@ -32,3 +34,19 @@ assert_contains($form, 'value="staff" selected');
 assert_contains($form, 'Action');
 assert_contains($form, 'onclick');
 assert_contains($form, 'method="POST"');
+
+$form = htform([
+    'method' => 'GET',
+    'data' => $_GET,
+    'fields' => [
+        'rating' => [
+            'placeholder' => 'Rating'
+        ]
+    ],
+]);
+
+expose($form, 2);
+
+assert_contains($form, 'method="GET"');
+assert_contains($form, 'placeholder="Rating"');
+

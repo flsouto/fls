@@ -56,7 +56,7 @@ function assert_not_empty($val){
 }
 
 function expose($content, $id=1){
-    if($id == $GLOBALS['expose']){
+    if($id == ($GLOBALS['expose']??'')){
         echo $content;
         die();
     }

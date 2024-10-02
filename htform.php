@@ -17,6 +17,7 @@ function htform(array $attrs){
         } else {
             [$name, $func] = [$field, 'htinput'];
         }
+        $field_attrs['name'] = $name;
         if(isset($options['data'][$name])){
             $field_attrs['value'] = $options['data'][$name];
         }
