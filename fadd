@@ -1,0 +1,4 @@
+f=$FLS_PATH/$1
+touch $f
+chmod 777 $f
+nano $f
