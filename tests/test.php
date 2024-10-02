@@ -55,6 +55,13 @@ function assert_not_empty($val){
     }
 }
 
+function expose($content, $id=1){
+    if($id == $GLOBALS['expose']){
+        echo $content;
+        die();
+    }
+}
+
 $file = $argv[1]??null;
 
 assert_not_empty($file);
