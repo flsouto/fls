@@ -1,2 +1,0 @@
-du -h $1 | grep -P '\dG'
-du -h $1 | grep -P '[5-9]\d\dM'
