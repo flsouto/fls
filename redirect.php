@@ -1,9 +1,10 @@
 <?php
 
 function redirect($location){
-    if(!defined('fls_mock_call')){
-        header("location:$location");
-    } else {
-        fls_mock_call();
-    }
+    header("location:$location");
+    $GLOBALS['redirect_location'] = $location;
+}
+
+function redirect_location(){
+    return $GLOBALS['redirect_location']??null;
 }
