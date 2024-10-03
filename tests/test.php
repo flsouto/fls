@@ -62,6 +62,30 @@ function expose($content, $id=1){
     }
 }
 
+$fls_mocked_calls = [];
+
+function fls_mock_call($return=null){
+    global $fls_mocked_calls;
+    $bt = debug_backtrace();
+    $bt = end($bt);
+    $fls_mocked_calls[$bt['function']][] = [
+        'args' => $bt['args'],
+        'return' => $return
+    ];
+}
+
+function assert_called($function){
+
+}
+
+function assert_called_with($function, array $args){
+
+}
+
+function assert_return_equals($function, $contains){
+
+}
+
 $file = $argv[1]??null;
 
 assert_not_empty($file);
