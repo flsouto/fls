@@ -1,0 +1,11 @@
+[[ "$1" -eq 'install' ]] && tail $0 -n +2 >> ~/.bashrc && echo "Don't forget to source ~/.bashrc" && exit 0;
+
+_fltm_complete() {
+  local cur=${COMP_WORDS[COMP_CWORD]}
+  local dirs=$(find ~/Documents -maxdepth 1 -type d -printf "%f\n")
+
+  COMPREPLY=( $(compgen -W "$dirs" -- "$cur") )
+}
+
+complete -F _fltm_complete fltm
+
