@@ -6,6 +6,11 @@ if [ -z "$1" ]; then
   exit 1
 fi
 
+if [ ! -z "$TMUX" ]; then
+    tmux switch-client -t $1
+    exit 0
+fi
+
 SESSION_NAME=$1
 SESSION_DIR="$HOME/Documents/$SESSION_NAME"
 
