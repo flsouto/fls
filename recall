@@ -1,0 +1,42 @@
+#!/bin/bash
+
+# Define the storage directory
+STORAGE_DIR="$HOME/.recall"
+
+# Create the directory if it doesn't exist
+mkdir -p "$STORAGE_DIR"
+
+# Function to store a password
+store_password() {
+    local key="$1"
+    local value="$2"
+    
+    # Save the password to a file
+    echo "$value" > "$STORAGE_DIR/$key"
+}
+
+# Function to retrieve a password
+retrieve_password() {
+    local key="$1"
+    
+    if [[ -f "$STORAGE_DIR/$key" ]]; then
+        # Copy the password to the clipboard
+        local value
+        value=$(<"$STORAGE_DIR/$key")   # Read the content of the file
+        value=$(echo "$value" | tr -d '\n' | xargs)  # Remove line breaks and trim whitespace
+        echo -n "$value" | xclip -selection clipboard  # Change xclip to pbcopy on macOS        
+        echo "Value copied to clipboard."
+    else
+        echo "No value found for key: $key"
+    fi
+}
+
+# Main script logic
+if [[ $# -eq 2 ]]; then
+    store_password "$1" "$2"
+elif [[ $# -eq 1 ]]; then
+    retrieve_password "$1"
+else
+    echo "Usage: recall key [value]"
+    echo "Use recall key to store a value or recall key to retrieve it."
+fi

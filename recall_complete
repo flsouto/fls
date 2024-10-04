@@ -1,0 +1,14 @@
+[[ "$1" -eq 'install' ]] && tail $0 -n +2 >> ~/.bashrc && echo "Don't forget to source ~/.bashrc" && exit 0;
+
+STORAGE_DIR="$HOME/.recall"
+
+# Autocomplete function
+_recall_autocomplete() {
+    local cur=${COMP_WORDS[COMP_CWORD]}
+    local files=$(find $STORAGE_DIR -maxdepth 1 -type f -printf "%f\n")
+
+    COMPREPLY=($(compgen -W "$files" -- "$cur" ))
+}
+
+# Register autocomplete
+complete -F _recall_autocomplete recall
