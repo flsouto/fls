@@ -12,4 +12,4 @@ function ali {
     eval $func
 }
 
-[[ "$1" -eq 'install' ]] && head $0 -n -2 >> ~/.bashrc;
+[[ "$1" -eq 'install' ]] && head $0 -n -2 >> ~/.bashrc && echo "Don't forget to source ~/.bashrc";
