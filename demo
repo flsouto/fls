@@ -2,8 +2,11 @@
 
 [[ -z $1 ]] && echo "Demo file not provided" && exit 1
 
+sesspath=$(sudo php -r "echo session_save_path();")
+sudo rm $sesspath/sess_*
+
 name=$(echo ${1%.*})
-index=${2:-1}
+index=${2:-index}
 
 (sleep .1; firefox localhost:4311/$name/$index) &
 php -S localhost:4311 demo_router.php

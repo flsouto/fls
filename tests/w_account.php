@@ -10,7 +10,7 @@ $html = w_account($params=[
     'home_url' => '/success_url'
 ]);
 
-expose($html, 'default');
+expose($html);
 
 assert_contains($html, '<form');
 assert_contains($html, '<button');
@@ -28,20 +28,20 @@ assert_contains($html, 'action="?signup');
 $_SERVER['REQUEST_METHOD'] = 'POST';
 $html = w_account($params);
 
-assert_not_empty($error_msg);
-assert_contains($error_msg, "mail");
-assert_contains($html, $error_msg);
+assert_not_empty($w_error_msg);
+assert_contains($w_error_msg, "mail");
+assert_contains($html, $w_error_msg);
 
 // Test POST signup without password
 $_POST['email'] = 'user@domain.com';
 $html = w_account($params);
-assert_not_empty($error_msg);
-assert_contains($error_msg, 'password');
+assert_not_empty($w_error_msg);
+assert_contains($w_error_msg, 'password');
 
 // Test POST signup succeeds
 $_POST['password'] = '12345';
 $html = w_account($params);
-assert_empty($error_msg);
+assert_empty($w_error_msg);
 assert_not_empty($redirect_location);
 expect($redirect_location, $params['home_url']);
 assert_not_empty($_SESSION['uid']);
@@ -49,13 +49,13 @@ assert_not_empty($_SESSION['uid']);
 // Test signup with same data fails
 unset($_SESSION['uid']);
 $html = w_account($params);
-assert_not_empty($error_msg);
-assert_contains($error_msg, 'exists');
+assert_not_empty($w_error_msg);
+assert_contains($w_error_msg, 'exists');
 
 // Test POST signin with same data succeeds
 unset($_GET['signup']);
 $html = w_account($params);
-assert_empty($error_msg);
+assert_empty($w_error_msg);
 assert_not_empty($_SESSION['uid']);
 expect($redirect_location, $params['home_url']);
 
@@ -63,5 +63,5 @@ expect($redirect_location, $params['home_url']);
 unset($_SESSION['uid']);
 $_POST = [];
 $html = w_account($params);
-assert_not_empty($error_msg);
-assert_contains($html, $error_msg);
+assert_not_empty($w_error_msg);
+assert_contains($html, $w_error_msg);

@@ -2,6 +2,8 @@
 require_once(__DIR__.'/htform.php');
 require_once(__DIR__.'/jsondb.php');
 require_once(__DIR__.'/redirect.php');
+require_once(__DIR__.'/w_error_msg.php');
+
 function w_account_form(){
     return [
         'data' => $_POST??[],
@@ -21,9 +23,7 @@ function w_account_form(){
 
 function w_account_handle(array $options){
 
-    global $error_msg;
-
-    $error_msg = "";
+    w_error_msg_set("");
 
     if(($_SERVER['REQUEST_METHOD']??'') !== 'POST'){
         return;
@@ -32,8 +32,7 @@ function w_account_handle(array $options){
     $email = trim($_POST['email']??'');
 
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)){
-        $error_msg = "Invalid email: $email";
-        return;
+        return w_error_msg_set("Invalid email: $email");
     }
 
     $store = $options['store'] ?? 'account_%s.json';
@@ -49,12 +48,11 @@ function w_account_handle(array $options){
     if($is_signup){
 
         if(strlen($password) < 5){
-            $error_msg = "Password too short: $password";
-            return;
+            return w_error_msg_set("Password too short: $password");
         }
 
         if(!empty($user['id'])){
-            $error_msg = "An account with this email already exists";
+            return w_error_msg_set("An account with this email already exists");
         } else {
             $user['id'] = $id;
             $user['email'] = $email;
@@ -70,14 +68,12 @@ function w_account_handle(array $options){
             redirect($home_url);
             return;
         } else {
-            $error_msg = "Invalid credentials";
+            return w_error_msg_set("Invalid credentials");
         }
     }
 }
 
 function w_account(array $options){
-
-    global $error_msg;
 
     if(!session_id()) session_start();
 
@@ -96,8 +92,8 @@ function w_account(array $options){
 
     w_account_handle($options);
 
-    if(!empty($error_msg)){
-        $html[] = htag('div',['class'=>'error_msg'], $error_msg);
+    if($error_msg = w_error_msg()){
+        $html[] = $error_msg;
     }
 
     $is_signup = !empty($_GET['signup']);

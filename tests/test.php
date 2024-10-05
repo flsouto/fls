@@ -62,7 +62,7 @@ function assert_empty($val){
     }
 }
 
-function expose($content, $id=1){
+function expose($content, $id='index'){
     if($id == ($GLOBALS['expose']??'')){
         echo $content;
         die();

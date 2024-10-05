@@ -1,13 +1,12 @@
 <?php
-
 $form = htform([
     'method' => 'POST',
     'button' => 'Register',
-    'data' => [
+    'data' => array_merge([
         'name' => 'Somebody',
         'email' => 'test@domain.com',
         'type' => 'staff'
-    ],
+    ],$_POST),
     'fields' => [
         'name' => [
             'placeholder' => 'Your Name'
@@ -21,7 +20,7 @@ $form = htform([
         ]
     ],
     'button' => 'Action',
-    'button_attrs' => ['onclick'=>'jsfunc()']
+    'button_attrs' => ['onclick'=>"alert('OK')"]
 ]);
 
 expose($form);
@@ -45,7 +44,7 @@ $form = htform([
     ],
 ]);
 
-expose($form, 2);
+expose($form, 'rating');
 
 assert_contains($form, 'method="GET"');
 assert_contains($form, 'placeholder="Rating"');
