@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# Starting port number
+START_PORT=8000
+
+# Function to check if a port is in use
+is_port_in_use() {
+    lsof -i :$1 >/dev/null 2>&1
+}
+
+# Loop through ports starting from START_PORT
+for ((port=$START_PORT; port<=65535; port++)); do
+    if ! is_port_in_use $port; then
+        echo "Next available port: $port"
+        exit 0
+    fi
+done
+
+echo "No available ports found."
+exit 1
