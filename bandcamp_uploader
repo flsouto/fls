@@ -1,0 +1,26 @@
+#!/bin/python3
+
+import pyautogui
+import sys
+from fls import *
+
+folder = sys.argv[1]
+files = scandir(folder)
+
+set_assets_dir(fls_dir() + '/.bandcamp_uploader')
+
+for index, file in enumerate(files):
+
+    locate_and_click('add_track.png')
+
+    pyautogui.write(file)
+    sleep(1)
+
+    pyautogui.press('enter')
+    sleep(1)
+
+    locate_and_click('track_name.png')
+
+    pyautogui.write(file)
+
+    sleep(rand(8,15))
