@@ -9,64 +9,98 @@ function w_account_form(){
         'fields' => [
             'email' => [
                 'type' => 'email',
+                'placeholder' => 'E-mail'
             ],
             'password' => [
-                'type' => 'password'
+                'type' => 'password',
+                'placeholder' => 'Password'
             ]
         ]
     ];
 }
 
+function w_account_handle(array $options){
+
+    global $error_msg;
+
+    $error_msg = "";
+
+    if(($_SERVER['REQUEST_METHOD']??'') !== 'POST'){
+        return;
+    }
+
+    $email = trim($_POST['email']??'');
+
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)){
+        $error_msg = "Invalid email: $email";
+        return;
+    }
+
+    $store = $options['store'] ?? 'account_%s.json';
+
+    $id = str_replace(['@','.'],['_at_','_'],$email);
+    $user = jsondb(sprintf($store,$id));
+
+    $is_signup = !empty($_GET['signup']);
+    $home_url = $options['home_url']??'/';
+
+    $password = trim($_POST['password']??'');
+
+    if($is_signup){
+
+        if(strlen($password) < 5){
+            $error_msg = "Password too short: $password";
+            return;
+        }
+
+        if(!empty($user['id'])){
+            $error_msg = "An account with this email already exists";
+        } else {
+            $user['id'] = $id;
+            $user['email'] = $email;
+            $user['password'] = $password;
+            $user->save();
+            $_SESSION['uid'] = $id;
+            redirect($home_url);
+            return;
+        }
+    } else {
+        if(!empty($user['password']) && $user['password'] == $password){
+            $_SESSION['uid'] = $id;
+            redirect($home_url);
+            return;
+        } else {
+            $error_msg = "Invalid credentials";
+        }
+    }
+}
+
 function w_account(array $options){
+
+    global $error_msg;
 
     if(!session_id()) session_start();
 
     $home_url = $options['home_url']??'/';
+
+    if(isset($_GET['logout'])){
+        unset($_SESSION['uid']);
+    }
 
     if(isset($_SESSION['uid'])){
         redirect($home_url);
         return;
     }
 
-    $save_as = $options['save_as'] ?? 'account_%s.json';
-    $driver = $options['db_driver'] ?? 'jsondb';
-    $is_signup = !empty($_GET['signup']);
+    $html = [];
 
-    if($_SERVER['REQUEST_METHOD'] === 'POST'){
+    w_account_handle($options);
 
-        $email = trim($_POST['email']);
-        if(!stristr($email,'@')){
-            die("Invalid email: $email");
-        }
-        $password = trim($_POST['password']);
-        if(strlen($password) < 5){
-            die("Password too short: $password");
-        }
-        $id = str_replace(['@','.'],['_at_','_'],$email);
-        $user = $driver(sprintf($save_as,$id));
-
-        if($is_signup){
-            if(!empty($user['id'])){
-                // error: this user already exists
-                die('User already exists');
-            } else {
-                $user['id'] = $id;
-                $user['email'] = $email;
-                $user['password'] = $password;
-                $user->save();
-                $_SESSION['uid'] = $id;
-                redirect($home_url);
-                return;
-            }
-        } else {
-            if($user['password'] && $user['password'] == $password){
-                $_SESSION['uid'] = $id;
-            } else {
-                redirect($home_url);
-                return;
-            }
-        }
+    if(!empty($error_msg)){
+        $html[] = htag('div',['class'=>'error_msg'], $error_msg);
     }
+
+    $is_signup = !empty($_GET['signup']);
 
     $form = w_account_form();
 
@@ -78,16 +112,18 @@ function w_account(array $options){
         $form['action'] = '?';
     }
 
-    echo htform($form);
+    $html[] = htform($form);
 
-    $toggler = $options['toggler_enabled']??true;
+    $hide_toggler = $options['hide_toggler']??false;
 
-    if($toggler){
+    if(!$hide_toggler){
         if(!$is_signup){
-            echo htag('a', ['href'=>'?signup=1'], $options['toggler_signup']??"Sign up instead");
+            $html[] = htag('a', ['href'=>'?signup=1'], "Sign up instead");
         } else {
-            echo htag('a', ['href'=>'?'], $options['toggler_signin']??"Sign in instead");
+            $html[] = htag('a', ['href'=>'?'], "Sign in instead");
         }
     }
+
+    return implode($html);
 }
 

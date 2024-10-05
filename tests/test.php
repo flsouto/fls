@@ -9,6 +9,7 @@ function info($v){
 
 function _error($msg){
     global $info;
+    if(is_demo()) return;
     $dbt = debug_backtrace();
     $dbt = $dbt[1];
     echo $msg."\n";
@@ -55,11 +56,21 @@ function assert_not_empty($val){
     }
 }
 
+function assert_empty($val){
+    if(!empty($val)){
+        _error("Value should be empty but contains: $val");
+    }
+}
+
 function expose($content, $id=1){
     if($id == ($GLOBALS['expose']??'')){
         echo $content;
         die();
     }
+}
+
+function is_demo(){
+    return !empty($_SERVER['REQUEST_URI']);
 }
 
 $file = $argv[1]??null;
