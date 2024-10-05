@@ -1,0 +1,10 @@
+
+expand() {
+    # Expand the glob and assign the result to an array
+    eval "files=($1)"
+    
+    # Shuffle the array and print
+    printf "%s\n" "${files[@]}"
+}
+
+cp $(expand "$1" | shuf | head -n $2) $3 -v

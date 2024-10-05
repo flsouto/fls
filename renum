@@ -1,0 +1,43 @@
+#!/bin/bash
+
+# Check if the correct number of arguments is provided
+if [ "$#" -lt 1 ]; then
+    echo "Usage: $0 <folder_path> [prefix]"
+    exit 1
+fi
+
+# Get the folder path and prefix
+folder_path="$1"
+prefix="${2:-}"
+
+# Count the number of files in the specified folder
+file_count=$(ls -1q "$folder_path"/*.* 2>/dev/null | wc -l)
+
+# Check if any files were found
+if [ "$file_count" -eq 0 ]; then
+    echo "No files found in the specified folder."
+    exit 1
+fi
+
+# Calculate the number of digits needed for padding
+digits=${#file_count}
+
+counter=1
+
+# Loop through all files in the specified folder
+for file in "$folder_path"/*.*; do
+    # Check if it's a file (in case of no matching files)
+    if [ -f "$file" ]; then
+        # Get the file extension
+        extension="${file##*.}"
+
+        # Format the counter with leading zeros
+        new_name=$(printf "%s%0${digits}d.%s" "$prefix" "$counter" "$extension")
+
+        # Rename the file
+        mv "$file" "$folder_path/$new_name" -v
+
+        # Increment the counter
+        ((counter++))
+    fi
+done
