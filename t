@@ -6,10 +6,25 @@ if [ -z "$1" ]; then
   exit 1
 fi
 
+touch ~/.t-prev-sess
+touch ~/.t-curr-sess
+
 if [ ! -z "$TMUX" ]; then
-    tmux switch-client -t $1
+    if [ $1 = "-" ]; then
+        sess=$(cat ~/.t-prev-sess 2>/dev/null)
+        if [ -z $sess ]; then
+            echo "No previous session"; exit 1
+        fi
+    else
+        sess=$1
+    fi
+    tmux switch-client -t $sess
+    cat ~/.t-curr-sess > ~/.t-prev-sess
+    echo $sess > ~/.t-curr-sess
     exit 0
 fi
+
+
 
 SESSION_NAME=$1
 SESSION_DIR="$HOME/Documents/$SESSION_NAME"
@@ -36,7 +51,9 @@ if [ $? != 0 ]; then
 
   # Attach to the newly created session
   tmux attach-session -t "$SESSION_NAME"
+  cat ~/.t-curr-sess > ~/.t-prev-sess
 else
   # Session already exists, just attach to it
   tmux attach-session -t "$SESSION_NAME"
+  cat ~/.t-curr-sess > ~/.t-prev-sess
 fi
