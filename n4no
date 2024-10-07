@@ -1,0 +1,6 @@
+if [ ! -f .nanorc ]; then
+    cp ~/.nanorc .
+fi
+
+cat /etc/nanorc .nanorc > tmp.nanorc
+nano "$@"
