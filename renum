@@ -22,7 +22,7 @@ fi
 # Calculate the number of digits needed for padding
 digits=${#file_count}
 
-counter=1
+counter=${3:-1}
 
 # Loop through all files in the specified folder
 for file in "$folder_path"/*.*; do
