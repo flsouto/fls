@@ -3,4 +3,4 @@ if [ ! -f .nanorc ]; then
 fi
 
 cat /etc/nanorc .nanorc > tmp.nanorc
-nano "$@"
+nano -f tmp.nanorc "$@"
