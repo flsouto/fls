@@ -7,4 +7,9 @@ expand() {
     printf "%s\n" "${files[@]}"
 }
 
-cp $(expand "$1" | shuf | head -n $2) $3 -v
+glob="$1"
+if [[ -d "$1" ]]; then
+    glob="$1/*.*"
+fi
+
+cp $(expand "$glob" | shuf | head -n $2) $3 -v
