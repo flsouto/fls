@@ -7,18 +7,21 @@ STORAGE_DIR="$HOME/.recall"
 mkdir -p "$STORAGE_DIR"
 
 # Function to store a password
-store_password() {
+store_val() {
     local key="$1"
     local value="$2"
-    
+
     # Save the password to a file
     echo "$value" > "$STORAGE_DIR/$key"
+    if [ -d "$STORAGE_DIR/.git" ]; then
+        (cd $STORAGE_DIR; ga $key; gp)
+    fi
 }
 
 # Function to retrieve a password
-retrieve_password() {
+retrieve_val() {
     local key="$1"
-    
+
     if [[ -f "$STORAGE_DIR/$key" ]]; then
         # Copy the password to the clipboard
         local value
@@ -33,9 +36,13 @@ retrieve_password() {
 
 # Main script logic
 if [[ $# -eq 2 ]]; then
-    store_password "$1" "$2"
+    if [ "$2" = "-o" ]; then
+        cat "$STORAGE_DIR/$1"
+    else
+        store_val "$1" "$2"
+    fi
 elif [[ $# -eq 1 ]]; then
-    retrieve_password "$1"
+    retrieve_val "$1"
 else
     echo "Usage: recall key [value]"
     echo "Use recall key to store a value or recall key to retrieve it."

@@ -30,6 +30,6 @@ def append_assets_dir(f):
 
 def locate_and_click(img):
     import pyautogui
-    image_location = pyautogui.locateOnScreen(append_assets_dir(img))
+    image_location = pyautogui.locateOnScreen(append_assets_dir(img),.8)
     image_center = pyautogui.center(image_location)
     pyautogui.click(image_center)
