@@ -1,0 +1,31 @@
+#!/bin/bash
+
+# Check if two arguments (files) are provided
+if [ "$#" -ne 2 ]; then
+  echo "Usage: swap file1 file2"
+  exit 1
+fi
+
+# Assign arguments to variables for clarity
+file1=$1
+file2=$2
+
+# Check if both files exist
+if [ ! -f "$file1" ] || [ ! -f "$file2" ]; then
+  echo "Both files must exist."
+  exit 1
+fi
+
+# Create a temporary file for swapping
+temp=$(mktemp)
+
+# Perform the swap
+mv "$file1" "$temp" && mv "$file2" "$file1" && mv "$temp" "$file2"
+
+# Confirm the swap
+if [ $? -eq 0 ]; then
+  echo "Successfully swapped $file1 and $file2."
+else
+  echo "Error swapping files."
+  exit 1
+fi
