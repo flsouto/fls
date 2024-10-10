@@ -1,0 +1,6 @@
+f=$1
+shift
+
+while :; do
+    watch -g cat $f; $@;
+done
