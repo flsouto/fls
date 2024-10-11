@@ -1,10 +1,8 @@
-
-
 alias __DIR__='echo $( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )'
+export FLS_PATH=$(__DIR__)
 
 function ext {
     echo "${1##*.}"
 }
 
-export FLS_PATH=$(__DIR__)
 
