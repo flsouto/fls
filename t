@@ -16,7 +16,7 @@ if [ ! -z "$TMUX" ]; then
             echo "No previous session"; exit 1
         fi
     else
-        sess=$1
+        sess=$(echo $1 | sed 's/\./_/')
     fi
     tmux switch-client -t $sess
     cat ~/.t-curr-sess > ~/.t-prev-sess
@@ -24,10 +24,8 @@ if [ ! -z "$TMUX" ]; then
     exit 0
 fi
 
-
-
-SESSION_NAME=$1
-SESSION_DIR="$HOME/Documents/$SESSION_NAME"
+SESSION_NAME=$(echo $1 | sed 's/\./_/')
+SESSION_DIR="$HOME/Documents/$1"
 
 # Check if session already exists
 tmux has-session -t "$SESSION_NAME" 2>/dev/null

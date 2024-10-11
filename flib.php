@@ -1,6 +1,6 @@
 <?php
 
 foreach(glob(__DIR__."/*.php") as $lib){
-    if(basename($lib) === 'flib.php') continue;
-    require $lib;
+    if(in_array(basename($lib),['flib.php','demo_router.php'])) continue;
+    require_once $lib;
 }

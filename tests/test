@@ -1,4 +1,5 @@
 #!/bin/bash
+. ../common
 
 function expect {
     if [[ "$1" != "$2" ]]; then
@@ -7,12 +8,31 @@ function expect {
     fi;
 }
 
-ext="${1##*.}"
+function test_file {
 
+    type=$(ext $1)
 
-if [[ $ext == "php" ]]
-then
-    php ./test.php $1
+    if [[ $type == "php" ]]
+    then
+        php ./test.php $1
+    elif [[ -z $type ]]
+    then
+        . ./$1
+    else
+        echo skipping $i
+    fi
+}
+
+if [ ! -z $1 ]; then
+    test_file $1
 else
-    . ./$1
+    for f in $(fls_dir)/*; do
+        f=$(basename $f)
+        if [[ -f $(fls_dir)/tests/$f ]]; then
+            out=$(test_file $f 2>&1);
+            [[ "$out" == *"skipping" ]] && continue;
+            echo "Tested $f"
+            [[ ! -z "$out" ]] && echo $out && break;
+        fi;
+    done;
 fi
