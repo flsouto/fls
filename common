@@ -1,0 +1,14 @@
+
+
+function dir_macro {
+    echo 'echo $( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )'
+}
+
+function fls_dir {
+    eval $(dir_macro)
+}
+
+function ext {
+    v="${1##*.}"
+    echo $v
+}
