@@ -1,14 +1,11 @@
 
 
-function dir_macro {
-    echo 'echo $( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )'
-}
-
-function fls_dir {
-    eval $(dir_macro)
-}
+alias __DIR__='echo $( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )'
 
 function ext {
     v="${1##*.}"
     echo $v
 }
+
+export FLS_PATH=$(__DIR__)
+

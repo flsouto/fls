@@ -1,4 +1,7 @@
 #!/bin/bash
+
+shopt -s expand_aliases
+
 . ../common
 
 function expect {
@@ -26,9 +29,9 @@ function test_file {
 if [ ! -z $1 ]; then
     test_file $1
 else
-    for f in $(fls_dir)/*; do
+    for f in $FLS_PATH/*; do
         f=$(basename $f)
-        if [[ -f $(fls_dir)/tests/$f ]]; then
+        if [[ -f $FLS_PATH/tests/$f ]]; then
             out=$(test_file $f 2>&1);
             [[ "$out" == *"skipping" ]] && continue;
             echo "Tested $f"
