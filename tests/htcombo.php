@@ -2,8 +2,8 @@
 
 $out = htcombo([
     'options' => [
-        'One' => 1,
-        'Two' => 2
+        1 => 'One',
+        2 => 'Two'
     ]
 ]);
 
@@ -13,8 +13,9 @@ expose($out, 1);
 
 $out = htcombo([
     'options' => [
-        'One' => 1,
-        'Two' => 2
+        1 => 'One',
+        2 => 'Two',
+        3 => ['name' => 'Three','xxx'=>'XX']
     ],
     'value' => 2,
     'id' => 'test'
@@ -22,5 +23,6 @@ $out = htcombo([
 
 assert_contains($out,'option value="2" selected');
 assert_contains($out,'select id="test"');
+assert_contains($out,'value="3">Three<');
 
 expose($out, 2);

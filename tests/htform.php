@@ -16,7 +16,7 @@ $form = htform([
             'placeholder' => 'Your Email'
         ],
         'type:htcombo' => [
-            'options' => ['Admin' => 'admin', 'Staff'=>'staff']
+            'options' => ['admin' => 'Admin', 'staff'=>'Staff']
         ]
     ],
     'button' => 'Action',

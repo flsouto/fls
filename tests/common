@@ -1,0 +1,3 @@
+
+expect $(ext 'file.txt') 'txt'
+expect $(ext 'file') ''

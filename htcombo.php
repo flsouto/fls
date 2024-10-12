@@ -8,8 +8,11 @@ function htcombo($attrs = []){
     $options = $attrs['options']??[];
     unset($attrs['value'],$attrs['options']);
     $htopts = [];
-    foreach($options as $label => $id){
+    foreach($options as $id => $label){
         $selected = $id == $value ? ' selected' : '';
+        if(is_array($label) && isset($label['name'])){
+            $label = $label['name'];
+        }
         $htopts[] = htag('option',['value'=>$id, 'selected'=>$id==$value], $label);
     }
     return htag('select', $attrs, $htopts);
