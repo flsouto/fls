@@ -9,6 +9,9 @@ function htcombo($attrs = []){
     unset($attrs['value'],$attrs['options']);
     $htopts = [];
     foreach($options as $id => $label){
+        if(is_array($label) && isset($label['id'])){
+            $id = $label['id'];
+        }
         $selected = $id == $value ? ' selected' : '';
         if(is_array($label) && isset($label['name'])){
             $label = $label['name'];

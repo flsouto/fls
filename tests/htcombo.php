@@ -15,7 +15,7 @@ $out = htcombo([
     'options' => [
         1 => 'One',
         2 => 'Two',
-        3 => ['name' => 'Three','xxx'=>'XX']
+        ['id'=>3, 'name' => 'Three','created'=>time()]
     ],
     'value' => 2,
     'id' => 'test'
