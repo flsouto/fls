@@ -14,7 +14,6 @@ function expect {
 function test_file {
 
     type=$(ext $1)
-
     if [[ $type == "php" ]]
     then
         php ./test.php $1

@@ -17,7 +17,11 @@ switch($ext){
     case 'php':
         require $file;
         $func = str_replace(".$ext","",$file);
-        $args = array_map(fn($arg) => json_decode($arg,true), array_slice($argv,2));
+        if($argv[2] === '-j'){
+            $args = array_map(fn($arg) => json_decode($arg,true), array_slice($argv,3));
+        } else {
+            $args = array_slice($argv, 2);
+        }
         $result = $func(...$args);
         if(is_array($result)){
             $result = implode("\n", $result);

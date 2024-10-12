@@ -1,8 +1,17 @@
 alias __DIR__='echo $( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )'
 export FLS_PATH=$(__DIR__)
 
-function ext {
-    echo "${1##*.}"
+ext() {
+  filename="$1"
+  # Extract the extension using parameter expansion
+  ext="${filename##*.}"
+  
+  # Check if the file has an extension
+  if [[ "$filename" == *.* && "$ext" != "$filename" ]]; then
+    echo "$ext"
+  else
+    echo ""
+  fi
 }
 
 
