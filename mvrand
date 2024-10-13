@@ -1,0 +1,15 @@
+
+expand() {
+    # Expand the glob and assign the result to an array
+    eval "files=($1)"
+    
+    # Shuffle the array and print
+    printf "%s\n" "${files[@]}"
+}
+
+glob="$1"
+if [[ -d "$1" ]]; then
+    glob="$1/*.*"
+fi
+
+mv $(expand "$glob" | shuf | head -n $2) $3 -v

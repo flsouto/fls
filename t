@@ -40,8 +40,13 @@ if [ $? != 0 ]; then
   # Split the window into two panes (top and bottom)
   tmux split-window -v -t "$SESSION_NAME"
 
+  if [[ -f $SESSION_DIR/aliases ]]; then
+    tmux send-keys -t 1 "source aliases" C-m
+  fi
+
   # Attach to the newly created session
   tmux attach-session -t "$SESSION_NAME"
+
   cat ~/.t-curr-sess > ~/.t-prev-sess
 else
   # Session already exists, just attach to it
