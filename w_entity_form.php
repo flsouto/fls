@@ -59,7 +59,7 @@ function w_entity_form(array $params){
     $html[] = w_error_msg();
 
     $html[] = htform([
-        'action' => 'POST'
+        'action' => 'POST',
         'fields' => $fields,
         'button' => $params['button'] ?? 'Save'
     ]);
