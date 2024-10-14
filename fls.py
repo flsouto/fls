@@ -1,5 +1,6 @@
 import os
 import time
+import sys
 
 def sleep(secs):
     time.sleep(secs)
@@ -28,8 +29,14 @@ def append_assets_dir(f):
         return assets_dir + '/' + f
     return f
 
-def locate_and_click(img):
+def locate_and_click(img,conf=.5):
     import pyautogui
-    image_location = pyautogui.locateOnScreen(append_assets_dir(img),.5)
+    image_location = pyautogui.locateOnScreen(append_assets_dir(img),conf)
     image_center = pyautogui.center(image_location)
     pyautogui.click(image_center)
+
+def stdin_lines():
+    lines = []
+    if not sys.stdin.isatty():
+        lines = sys.stdin.read().splitlines()
+    return lines
