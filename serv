@@ -1,0 +1,10 @@
+#!/bin/bash
+
+port=$(nextport)
+
+(sleep .1; xdg-open http://localhost:$port) &
+
+echo "$@" > .serv_args_$port
+
+php -S localhost:$port serv_router.php
+

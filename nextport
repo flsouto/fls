@@ -11,7 +11,7 @@ is_port_in_use() {
 # Loop through ports starting from START_PORT
 for ((port=$START_PORT; port<=65535; port++)); do
     if ! is_port_in_use $port; then
-        echo "Next available port: $port"
+        echo $port
         exit 0
     fi
 done
