@@ -1,34 +1,5 @@
 #!/bin/php
 <?php
 
-$file = $argv[1];
-$ext = pathinfo($file, PATHINFO_EXTENSION);
-
-if(empty($ext)){
-    foreach(['php','py','js'] as $ext){
-        if(stream_resolve_include_path("$file.$ext")){
-            $file = "$file.$ext";
-            break;
-        }
-    }
-}
-
-switch($ext){
-    case 'php':
-        require $file;
-        $func = str_replace(".$ext","",$file);
-        if($argv[2] === '-j'){
-            $args = array_map(fn($arg) => json_decode($arg,true), array_slice($argv,3));
-        } else {
-            $args = array_slice($argv, 2);
-        }
-        $result = $func(...$args);
-        if(is_array($result)){
-            $result = implode("\n", $result);
-        }
-        echo $result;
-    break;
-    default:
-        echo "No fcall handler for file: $file\n";
-        exit(1);
-}
+require_once(__DIR__."/fcall.php");
+fcall($argv[1], array_slice($argv,2));
