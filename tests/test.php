@@ -26,6 +26,12 @@ function assert_file_exists($file){
     }
 }
 
+function assert_file_not_exists($file){
+    if(file_exists($file)){
+        _error("File exists: $file");
+    }
+}
+
 function assert_contains($content, $substr){
     if(!stristr($content, $substr)){
         _error("Failed checking that '$content' contains '$substr'");
@@ -79,6 +85,11 @@ function assert_empty($val){
     if(!empty($val)){
         _error("Value should be empty but contains: $val");
     }
+}
+
+function apply_redirect(){
+    $q = explode('?',redirect_location())[1] ?? '';
+    parse_str($q, $_GET);
 }
 
 function click_link($html,$text){

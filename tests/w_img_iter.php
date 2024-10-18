@@ -49,4 +49,42 @@ assert_contains_in_order($html, [
 ]);
 
 
+// TEST: goes back to last image
+click_link($html, "Prev");
+
+$html = $render();
+
+$data = b64_data_url("/tmp/test_w_img_iter_5.png");
+
+assert_contains_in_order($html, [
+    "/tmp/test_w_img_iter_5.png",
+    "5 of 5",
+    "<img",
+    $data
+]);
+
+// TEST: goes back to first image
+click_link($html, "Next");
+
+$html = $render();
+
+$data = b64_data_url($f="/tmp/test_w_img_iter_1.png");
+
+assert_contains_in_order($html, [
+    $f,
+    "1 of 5",
+    "<img",
+    $data
+]);
+
+// TEST: remove first image
+click_link($html, "Remove");
+$html = $render();
+
+assert_file_not_exists($f);
+assert_contains(redirect_location(), '=0');
+apply_redirect();
+
+$html = $render();
+assert_contains($html, '1 of 4');
 
