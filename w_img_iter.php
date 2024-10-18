@@ -22,6 +22,10 @@ function w_img_iter($ipt_glob){
 
     $total = count($imgs);
 
+    $actions = [];
+
+    
+
     return w_dialog([
         'class' => 'w_img_iter',
         'title' => "$img <br/> (".($index+1)." of $total)",
@@ -33,8 +37,8 @@ function w_img_iter($ipt_glob){
                 'hotkey' => 'r'
             ],
             'Prev' => [
-                'href' => '?wii='.($index-1),
-                'hotkey' => 'p'
+                'href' => '?wii='.($index-1 < 0 ? $total-1 : $index-1),
+                'hotkey' => 'p',
             ],
             'Next' => [
                 'href' => '?wii='.($index+1),

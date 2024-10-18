@@ -81,6 +81,24 @@ function assert_empty($val){
     }
 }
 
+function click_link($html,$text){
+    $dom = new DOMDocument();
+    @$dom->loadHTML($html);
+    $xpath = new DOMXPath($dom);
+
+    $nodes = $xpath->query("//a[contains(text(), '$text')]");
+
+    if (!$nodes->length ) {
+        _error("Link not found: $text");
+    }
+    $element = $nodes->item(0);
+    if(!$href = $element->attributes['href'] ?? null){
+        _error("Link '$text' has empty href.");
+    }
+    $q = explode('?',$href->textContent)[1] ?? '';
+    parse_str($q, $_GET);
+}
+
 function expose($content, $id='index'){
     if($id == ($GLOBALS['expose']??'')){
         echo $content;
