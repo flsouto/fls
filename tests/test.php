@@ -32,6 +32,25 @@ function assert_contains($content, $substr){
     }
 }
 
+function assert_contains_in_order($string, $values) {
+    $currentPos = 0;
+
+    foreach ($values as $value) {
+        $currentPos = strpos($string, $value, $currentPos);
+        if ($currentPos === false) {
+            return _error("Failed checking that '$string' has '$value' in the expected order.");
+        }
+
+        $currentPos += strlen($value);
+    }
+}
+
+function assert_contains_all($content, $substr){
+    if(!stristr($content, $substr)){
+        _error("Failed checking that '$content' contains '$substr'");
+    }
+}
+
 function assert_not_contains($content, $substr){
     if(stristr($content, $substr)){
         _error("Failed checking that '$content' does not contain '$substr'");
