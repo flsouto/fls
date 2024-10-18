@@ -1,0 +1,6 @@
+<?php
+
+
+$url = b64_data_url(__DIR__."/1x1.png");
+
+expect($url, 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAQMAAAAl21bKAAAAA1BMVEUAAACnej3aAAAAAXRSTlMAQObYZgAAAApJREFUCNdjYAAAAAIAAeIhvDMAAAAASUVORK5CYII=');
