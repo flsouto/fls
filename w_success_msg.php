@@ -14,3 +14,7 @@ function w_success_msg($msg=null){
 function w_success_msg_set($msg){
     $GLOBALS['w_success_msg'] = $msg;
 }
+
+function w_success_msg_get(){
+    return $GLOBALS['w_success_msg']??null;
+}

@@ -14,3 +14,7 @@ function w_error_msg($msg=null){
 function w_error_msg_set($msg){
     $GLOBALS['w_error_msg'] = $msg;
 }
+
+function w_error_msg_get(){
+    return $GLOBALS['w_error_msg']??'';
+}
