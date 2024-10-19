@@ -20,14 +20,14 @@ function w_dialog(array $attrs){
     }
 
     $html = htag('div',$attrs,[
-        htag('div',['class'=>'head'],[
-            htag('div',['class'=>'title'], $title??"")
+        htag('div.head',[
+            htag('div.title', $title??"")
         ]),
-        htag('div',['class'=>'body'],$content??""),
-        htag('div',['class'=>'actions'],$ht_actions),
+        htag('div.body',$content??""),
+        htag('div.actions',$ht_actions),
     ]);
 
-    $html .= htag('style', [], $style ?? w_dialog_default_style());
+    $html .= htag('style', $style ?? w_dialog_default_style());
 
     return $html;
 }
