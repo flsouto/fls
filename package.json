@@ -1,0 +1,25 @@
+{
+  "name": "fls",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/flsouto/fls.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/flsouto/fls/issues"
+  },
+  "homepage": "https://github.com/flsouto/fls#readme",
+  "dependencies": {
+    "googleapis": "^144.0.0"
+  }
+}
