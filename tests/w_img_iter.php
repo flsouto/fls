@@ -84,7 +84,16 @@ $html = $render();
 assert_file_not_exists($f);
 assert_contains(redirect_location(), '=0');
 apply_redirect();
-
 $html = $render();
 assert_contains($html, '1 of 4');
+
+// TEST: go to last image, remove last image (should go back to first)
+click_link($html, 'Prev');
+$html = $render();
+click_link($html, 'Remove');
+$render();
+apply_redirect();
+$html = $render();
+assert_contains($html, '1 of 3');
+assert_file_not_exists('/tmp/test_w_img_iter_5.png');
 

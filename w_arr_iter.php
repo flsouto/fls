@@ -15,14 +15,14 @@ function w_arr_iter($array, array $options){
     $index = $_GET['i']??0;
 
     if(!isset($array[$index])){
-        return redirect('?i=0');
+        return redirect(['i'=>0]);
     }
 
     $item = $array[$index];
 
     if($remove && isset($_GET['rm'])){
         $remove($item);
-        return redirect('?i='.(isset($array[$index+1])?$index:0));
+        return redirect(['rm'=>null, 'i' => isset($array[$index+1]) ? $index : 0 ]);
     }
 
     $total = count($array);
@@ -31,7 +31,7 @@ function w_arr_iter($array, array $options){
 
     if($remove){
         $actions['Remove'] = [
-            'href' => "?i=$index&rm=1",
+            'href' => ['i'=>$index,'rm'=>1],
             'style' => 'color:red',
             'hotkey' => 'r'
         ];
@@ -40,11 +40,11 @@ function w_arr_iter($array, array $options){
     $actions = [
         ...$actions,
         'Prev' => [
-            'href' => '?i='.($index-1 < 0 ? $total-1 : $index-1),
+            'href' => ['i' => $index-1 < 0 ? $total-1 : $index-1 ],
             'hotkey' => 'p',
         ],
         'Next' => [
-            'href' => '?i='.($index+1 >= $total ? 0 : $index+1),
+            'href' => ['i' => $index+1 >= $total ? 0 : $index+1 ],
             'hotkey' => 'n'
         ],
     ];
