@@ -43,7 +43,7 @@ assert_contains_in_order($html, [
 ]);
 
 $html = htag('div.box#123',[
-    htag('span.title', "Blah")
+    htag('span.the-title', "Blah")
 ]);
 
 assert_contains_in_order($html,[
@@ -51,7 +51,7 @@ assert_contains_in_order($html,[
     'class="box"',
     'id'=>'123',
     '<span',
-    'class="title"',
+    'class="the-title"',
     'Blah</span>',
     '</div>'
 ]);

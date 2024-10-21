@@ -21,7 +21,7 @@ function htcombo($attrs = []){
     $value = $attrs['value']??null;
     $options = $attrs['options']??[];
     $caption = $attrs['caption']??null;
-    unset($attrs['value'],$attrs['options']);
+    unset($attrs['value'],$attrs['options'],$attrs['required']);
     $htopts = [];
     if($caption){
         $htopts[] = htag('option',['value'=>''],$caption);

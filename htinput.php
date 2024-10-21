@@ -3,6 +3,9 @@
 require_once('htattrs.php');
 
 function htinput(array $attrs){
+    foreach(['regex'] as $field){
+        unset($attrs[$field]);
+    }
     $attrs = htattrs($attrs);
     return "<input $attrs />";
 }

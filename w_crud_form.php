@@ -2,24 +2,30 @@
 
 require_once(__DIR__."/jsondb.php");
 require_once(__DIR__."/htform.php");
+require_once(__DIR__."/redirect.php");
 require_once(__DIR__."/w_msg.php");
 
 function w_crud_form(array $params){
 
     $db = jsondb($params['store']);
 
-    if($_SERVER['REQUEST_METHOD'] != 'POST'){
+    if(($_SERVER['REQUEST_METHOD']??'') != 'POST'){
+        if($_GET['success']??0){
+            w_success_msg_set("Data saved successfully");
+        }
         $data = $db[$_GET['id']??null] ?? [];
-    } eles {
+    } else {
         $data = [];
         $fields = htform_parse_fields($params['fields']??[]);
+        w_error_msg_set('');
+        w_success_msg_set('');
         foreach($fields as $k => $spec){
             if(isset($_POST[$k])){
                 $data[$k] = $_POST[$k];
             }
             $handler = $spec['func'].'_handle';
-            if(function_exists($handler)){
-                $result = $handler($spec, $data);
+            if(!w_error_msg_get() && function_exists($handler)){
+                $result = $handler($spec['attrs'], $data);
                 if($result['error']??0){
                     w_error_msg_set($result['error']);
                 }
@@ -40,12 +46,12 @@ function w_crud_form(array $params){
 
             $db->save();
 
-            w_success_msg("Data saved successfully");
+            w_success_msg_set("Data saved successfully");
 
             if($callback=($params['success']??null)){
-                $h($id, $data, $db);
+                $callback($id, $data, $db);
             } else {
-                return redirect(['id' => $id]);
+                return redirect(['id' => $id,'success'=>1]);
             }
         }
     }
@@ -55,8 +61,8 @@ function w_crud_form(array $params){
 
     $html[] = htform([
         'data' => $data,
-        'action' => 'POST',
-        'fields' => $fields,
+        'method' => 'POST',
+        'fields' => $params['fields']??[],
         'button' => $params['button'] ?? 'Save'
     ]);
 

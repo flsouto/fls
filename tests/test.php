@@ -32,9 +32,14 @@ function assert_file_not_exists($file){
     }
 }
 
-function assert_contains($content, $substr){
-    if(!stristr($content, $substr)){
-        _error("Failed checking that '$content' contains '$substr'");
+function assert_contains($content, $substrs){
+    if(!is_array($substrs)){
+        $substrs = [$substrs];
+    }
+    foreach($substrs as $substr){
+        if(!stristr($content, $substr)){
+            _error("Failed checking that '$content' contains '$substr'");
+        }
     }
 }
 

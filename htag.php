@@ -7,7 +7,7 @@ function htag($type, $attrs=[], $content=null){
     if(is_string($attrs)){
         $attrs = [$attrs];
     }
-    preg_match("/(\w+)([.#]\w+)?([.#]\w+)?/",$type,$matches);
+    preg_match("/([\w-]+)([.#][\w-]+)?([.#][\w-]+)?/",$type,$matches);
     $type = $matches[1];
     for($i=2;$i<=3;$i++){
         if(!isset($matches[$i])) continue;
