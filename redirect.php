@@ -1,5 +1,6 @@
 <?php
 require_once(__DIR__."/htquery.php");
+require_once(__DIR__."/w_msg.php");
 
 function redirect($location){
     if(is_array($location)){
