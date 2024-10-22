@@ -10,7 +10,7 @@ const readline = require('readline');
 const assert = require('assert')
 const {google} = require('googleapis');
 const OAuth2 = google.auth.OAuth2;
-const vid_data = require('/home/fabio/Documents/industraumatic/yt_vid.json');
+const vid_data = JSON.parse(fs.readFileSync('yt_vid.json').toString());
 
 // video category IDs for YouTube:
 

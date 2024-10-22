@@ -4,7 +4,7 @@ require_once(__DIR__."/htquery.php");
 require_once(__DIR__."/htjs.php");
 
 function htag($type, $attrs=[], $content=null){
-    if(is_string($attrs)){
+    if(!is_array($attrs)){
         $attrs = [$attrs];
     }
     preg_match("/([\w-]+)([.#][\w-]+)?([.#][\w-]+)?/",$type,$matches);
