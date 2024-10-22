@@ -2,23 +2,16 @@
 require_once(__DIR__."/htag.php");
 require_once(__DIR__."/htjs.php");
 require_once(__DIR__."/replace_vars.php");
+require_once(__DIR__."/take.php");
 
 function htable(array $attrs){
 
-    $data = [];
-    $actions = [];
-
-    foreach(['data','actions'] as $k){
-        if(isset($attrs[$k])){
-            ${$k} = $attrs[$k];
-            unset($attrs[$k]);
-        }
-    }
+    [$attrs, $data, $actions] = take($attrs,'data','actions');
 
     $ths = [];
 
     foreach(array_keys($data[0]??[]) as $col){
-        $ths[] = htag('th', $col);
+        $ths[] = htag('th', ucwords(str_replace('_',' ',$col)));
     }
 
     if($actions){
@@ -39,11 +32,12 @@ function htable(array $attrs){
             if(is_callable($action)){
                 $buttons[] = $action($row);
             } else if(isset($action['href'])) {
+                [$btn_attrs, $href, $confirm] = take($action, 'href','confirm');
                 $href = replace_vars($action['href'], $row);
-                $onclick = htjsconfirm($action['confirm']??'')->visit($href)->script;
                 $buttons[] = htag('button',[
                     $label,
-                    'onclick' => $onclick
+                    'onclick' => htjsconfirm($action['confirm']??'')->visit($href),
+                    ...$btn_attrs
                 ]);
             } else {
                 $buttons[] = $action;

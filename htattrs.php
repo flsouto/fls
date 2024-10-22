@@ -9,6 +9,8 @@ function htattrs(array $attrs=[]){
             $strs[] = $k.'="'.implode(' ',$v).'"';
         } else if($k == 'style' && is_array($v)) {
             $strs[] = $k.'="'.htattrs_style($v).'"';
+        } else if(str_starts_with($k,'on') && is_object($v) && isset($v->script)){
+            $strs[] = $k.'="'.htmlentities($v->script).'"';
         } else {
             $strs[] = $k.'="'.htmlentities($v).'"';
         }
