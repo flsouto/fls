@@ -33,25 +33,31 @@ function htable(array $attrs){
         foreach($row as $k => $v){
             $tds[] = htag('td', [$v]);
         }
-        $a_td = [];
+
+        $buttons = [];
         foreach($actions as $label => $action){
             if(is_callable($action)){
-                $a_td[] = $action($row);
-            } else {
+                $buttons[] = $action($row);
+            } else if(isset($action['href'])) {
                 $href = replace_vars($action['href'], $row);
-                $a_td[] = htag('button',[
+                $onclick = htjsconfirm($action['confirm']??'')->visit($href)->script;
+                $buttons[] = htag('button',[
                     $label,
-                    'onclick' => htjsconfirm($button['confirm']??'')->visit($button['href'])
+                    'onclick' => $onclick
                 ]);
+            } else {
+                $buttons[] = $action;
             }
         }
-        if($a_td){
-            $tds[] = htag('td',$a_td);
+        if($buttons){
+            $tds[] = htag('td',$buttons);
         }
         $trs[] = htag('tr', $tds);
     }
 
     $tbody = htag('tbody',$trs);
+
+    $attrs = htattrs_add_class($attrs, 'htable', true);
 
     return htag('table', $attrs, [
         $thead,

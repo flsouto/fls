@@ -39,3 +39,14 @@ function htjsclick($id){
 function htjsalert($msg){
     return htjs("alert(".json_encode($msg).")");
 }
+
+function htjsconfirm($confirm='', $action=HtJs::HOOK){
+    if($confirm){
+        return htjs("if(confirm(".json_encode($confirm).")) { $action } ");
+    }
+    return htjs($action);
+}
+
+function htjsvisit($href){
+    return "location.href=".json_encode($href).";";
+}
