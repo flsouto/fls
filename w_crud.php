@@ -35,7 +35,9 @@ function w_crud(array $options){
             return;
         }
     } else {
-        $content = htable([
+        $content = [];
+        $content[] = htag('a.add',['href'=>['add'=>1]],'Add');
+        $content[] = htable([
             'data' => jsondb($store),
             'actions' => [
                 'Edit' => [
