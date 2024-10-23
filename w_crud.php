@@ -37,8 +37,22 @@ function w_crud(array $options){
     } else {
         $content = [];
         $content[] = htag('a.add',['href'=>['add'=>1]],'Add');
+
+        $data = [];
+        $fields = htform_parse_fields($fields);
+
+        foreach(jsondb($store) as $row){
+            foreach($row as $k => $v){
+                $fattrs = $fields[$k]['attrs'] ?? [];
+                if(isset($fields[$k]) && isset($fattrs['options'][$v])){
+                    $row[$k] = $fattrs['options'][$v];
+                }
+            }
+            $data[] = $row;
+        }
+
         $content[] = htable([
-            'data' => jsondb($store),
+            'data' => $data,
             'actions' => [
                 'Edit' => [
                     'href' => ['edit'=>1, 'id'=>'{id}']

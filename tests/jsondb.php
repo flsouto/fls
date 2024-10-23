@@ -18,3 +18,4 @@ expect($obj->k1, 1);
 expect($obj->k2, 2);
 expect($obj['k1'], 1);
 expect($obj['k2'], 2);
+

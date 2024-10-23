@@ -126,6 +126,17 @@ function is_demo(){
     return !empty($_SERVER['REQUEST_URI']);
 }
 
+$dstart = false;
+function dstart(){
+    $GLOBALS['dstart'] = true;
+}
+function dend($vars){
+    if($GLOBALS['dstart']??0){
+        print_r($vars);
+        die();
+    }
+}
+
 $file = $argv[1]??null;
 
 assert_not_empty($file);

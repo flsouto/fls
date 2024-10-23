@@ -1,6 +1,6 @@
 <?php
 
-require_once('htattrs.php');
+require_once(__DIR__.'/htattrs.php');
 
 function htinput(array $attrs){
     foreach(['regex'] as $field){

@@ -35,6 +35,7 @@ function htcombo($attrs = []){
 
 function htcombo_handle(array $attrs, array $data){
 
+    dend($attrs);
     require_once(__DIR__."/htinput.php");
     $result = htinput_handle($attrs, $data);
     if(!empty($result['error'])){
