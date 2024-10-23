@@ -8,22 +8,32 @@ require_once(__DIR__.'/htag.php');
 require_once(__DIR__.'/htattrs.php');
 
 function w_crud(array $options){
-    [$attrs, $store, $fields] = take($options, 'store', 'fields');
+
+    [$attrs, $store, $fields, $success, $delete] = take($options, 'store', 'fields', 'success', 'deleted');
 
     if(($_GET['rm']??0) && ($_GET['id']??0)){
         $db = jsondb($store);
         unset($db[$_GET['id']]);
         $db->save();
-        return redirect([
-            'rm' => null
-        ]);
+        if(is_callable($deleted)){
+            $deleted();
+        } else {
+            return redirect([
+                'rm' => null
+            ]);
+        }
     }
+
 
     if(($_GET['add']??0) || ($_GET['edit']??0)){
         $content = w_crud_form([
             'store' => $store,
             'fields' => $fields,
-            'success' => function($id){
+            'success' => function($id,$data,$db) use ($success){
+                if(is_callable($success)){
+                    $success($id,$data,$db);
+                    return;
+                }
                 redirect([
                     'add' => null,
                     'edit' => null,

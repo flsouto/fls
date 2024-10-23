@@ -8,7 +8,6 @@ require_once(__DIR__."/w_msg.php");
 function w_crud_form(array $params){
 
     $db = jsondb($params['store']);
-
     if(($_SERVER['REQUEST_METHOD']??'') != 'POST'){
         if($_GET['success']??0){
             w_success_msg_set("Data saved successfully");
