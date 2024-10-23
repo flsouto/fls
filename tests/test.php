@@ -95,6 +95,7 @@ function assert_empty($val){
 function apply_redirect(){
     $q = explode('?',redirect_location())[1] ?? '';
     parse_str($q, $_GET);
+    $_SERVER['REQUEST_METHOD'] = 'GET';
 }
 
 function click_link($html,$text){

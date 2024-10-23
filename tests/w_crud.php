@@ -91,10 +91,22 @@ assert_contains_in_order($html, [
 // TEST UPDATE
 $_GET['edit'] = 1;
 $_GET['id'] = $insert_id;
-$_SERVER['REQUEST_METHOD'] = 'GET';
 
 $render();
 assert_contains($html, $_POST['email']);
+
+$_SERVER['REQUEST_METHOD'] = 'POST';
+$_POST['email'] = 'changed@domain.com';
+$render();
+
+assert_not_empty(redirect_location());
+
+apply_redirect();
+
+$render();
+
+assert_contains_in_order($html, ['<table','test2@domain.com','changed@domain.com']);
+
 
 // TEST DELETE
 
