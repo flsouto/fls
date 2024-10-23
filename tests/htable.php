@@ -10,7 +10,7 @@ $html = htable([
     ],
     'actions' => [
         'Edit' => [
-            'href' => '?id={id}'
+            'href' => ['id'=>'{id}']
         ],
         'Remove' => [
             'href' => '?rm=1&id={id}',
@@ -26,8 +26,8 @@ assert_contains_in_order($html, [
     '<table',
     'class="htable languages"',
     '<thead',
-    '<th','id',
-    '<th','name',
+    '<th','Id',
+    '<th','Name',
     '<tbody',
     '<tr','1</td>','PHP</td>', '<td', '?id=1','Edit', 'Are you sure','rm=1&amp;id=1', 'Remove',
     '<tr','2</td>','JS</td>', '<td', '?id=2','Edit', 'Are you sure','rm=1&amp;id=2', 'Remove',

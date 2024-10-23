@@ -19,3 +19,10 @@ assert_contains_in_order($out,[
 $out = htjsconfirm('')->visit('?delete=1');
 assert_not_contains($out,'confirm');
 assert_contains($out,'location.href');
+
+$out = htjsconfirm('Are you sure?')->visit(['delete'=>1]);
+
+assert_contains_in_order($out,[
+    'confirm("Are you sure?")',
+    'location.href="?delete=1"',
+]);

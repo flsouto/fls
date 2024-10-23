@@ -1,4 +1,5 @@
 <?php
+require_once(__DIR__."/htquery.php");
 
 class HtJs{
 
@@ -48,5 +49,8 @@ function htjsconfirm($confirm='', $action=HtJs::HOOK){
 }
 
 function htjsvisit($href){
+    if(is_array($href)){
+        $href = htquery($href);
+    }
     return "location.href=".json_encode($href).";";
 }
