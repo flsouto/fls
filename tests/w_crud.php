@@ -107,8 +107,14 @@ $render();
 
 assert_contains_in_order($html, ['<table','test2@domain.com','changed@domain.com']);
 
-
 // TEST DELETE
+$_GET['rm'] = 1;
+$_GET['id'] = $insert_id;
+$render();
+apply_redirect();
+
+$render();
+
 
 
 
