@@ -52,12 +52,12 @@ $render();
 
 assert_not_empty(w_error_msg_get());
 
-$_POST['email'] = 'test@domain.com';
-$_POST['user_type'] = '1';
-
-$render();
-
-assert_empty(w_error_msg_get());
+for($i=1;$i<=3;$i++){
+    $_POST['email'] = 'test'.$i.'@domain.com';
+    $_POST['user_type'] = "$i";
+    $render();
+    assert_empty(w_error_msg_get());
+}
 
 apply_redirect();
 
