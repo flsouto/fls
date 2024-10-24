@@ -9,24 +9,30 @@ require_once(__DIR__.'/htattrs.php');
 
 function w_crud(array $options){
 
-    [$attrs, $store, $fields, $success, $delete] = take($options, 'store', 'fields', 'success', 'deleted');
+    [$attrs, $store, $fields, $success, $deleted] = take($options, 'store', 'fields', 'success', 'deleted');
 
     if(($_GET['rm']??0) && ($_GET['id']??0)){
         $db = jsondb($store);
+        $row = $db[$_GET['id']]??[];
         unset($db[$_GET['id']]);
         $db->save();
         if(is_callable($deleted)){
-            $deleted();
+            if(!$deleted($_GET['id'], $row)){
+                return;
+            }
         } else {
+            w_success_msg_set("Data deleted successfully!");
             return redirect([
-                'rm' => null
+                'rm' => null,
+                'id' => null
             ]);
         }
     }
 
+    $content = [];
 
     if(($_GET['add']??0) || ($_GET['edit']??0)){
-        $content = w_crud_form([
+        $content[] = w_crud_form([
             'store' => $store,
             'fields' => $fields,
             'success' => function($id,$data,$db) use ($success){
@@ -34,7 +40,9 @@ function w_crud(array $options){
                     $success($id,$data,$db);
                     return;
                 }
+                w_success_msg_set("Data saved successfully");
                 redirect([
+                    'id' => null,
                     'add' => null,
                     'edit' => null,
                     'hl' => $id
@@ -46,6 +54,15 @@ function w_crud(array $options){
         }
     } else {
         $content = [];
+
+        if($msg = w_error_msg()){
+            $content[] = $msg;
+        }
+
+        if($msg = w_success_msg()){
+            $content[] = $msg;
+        }
+
         $content[] = htag('a.add',['href'=>['add'=>1]],'Add');
 
         $data = [];

@@ -40,6 +40,7 @@ function w_crud_form(array $params){
                 $db[$id] = array_merge($db[$id]??[], $data);
             } else {
                 $id = uniqid();
+                $data = ['id'=>$id, ...$data];
                 $db[$id] = $data;
             }
 
@@ -48,7 +49,9 @@ function w_crud_form(array $params){
             w_success_msg_set("Data saved successfully");
 
             if($callback=($params['success']??null)){
-                $callback($id, $data, $db);
+                if(!$callback($id, $data, $db)){
+                    return;
+                }
             } else {
                 return redirect(['id' => $id,'success'=>1]);
             }

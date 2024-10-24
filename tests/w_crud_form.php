@@ -90,6 +90,8 @@ assert_not_empty($insert_id);
 $db = jsondb($store);
 assert_not_empty($db[$insert_id]);
 assert_not_empty($db[$insert_id]['email']);
+expect($db[$insert_id]['id'], $insert_id);
+
 expect($db[$insert_id]['email'], $_POST['email']);
 expect($db[$insert_id]['user_type'], $_POST['user_type']);
 

@@ -13,9 +13,9 @@ $html = w_success_msg();
 assert_contains($html, 'From globals');
 
 $w_success_msg = null;
-$_SESSION['w_success_msg'] = 'From session';
+$_COOKIE['w_success_msg'] = 'From cookie';
 $html = w_success_msg();
-assert_contains($html, 'From session');
+assert_contains($html, 'From cookie');
 
 w_success_msg_set("from setter");
 assert_contains($w_success_msg, "from setter");

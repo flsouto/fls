@@ -38,6 +38,8 @@ $render = function(array $options=[]){
 $render();
 assert_contains_in_order($html, ['class="w_crud','Add','<table']);
 
+expose($html);
+
 // TEST CREATE
 click_link($html, 'Add');
 $render();
@@ -70,7 +72,6 @@ for($i=1;$i<=3;$i++){
     assert_empty(w_error_msg_get());
     assert_not_empty($insert_id);
 }
-
 apply_redirect();
 
 $render();
@@ -85,7 +86,9 @@ assert_contains_in_order($html, [
     '<tr',
     'test3@domain.com</td>',
     'Guest</td>',
+    '?edit=1&amp;id='.$insert_id,
 ]);
+
 
 
 // TEST UPDATE
@@ -110,11 +113,19 @@ assert_contains_in_order($html, ['<table','test2@domain.com','changed@domain.com
 // TEST DELETE
 $_GET['rm'] = 1;
 $_GET['id'] = $insert_id;
-$render();
+$render([
+    'deleted' => function($id,$row){
+        $GLOBALS['deleted_id'] = $id;
+        $GLOBALS['deleted_email'] = $row['email'];
+    }
+]);
+assert_not_empty($deleted_id);
+expect('changed@domain.com',$deleted_email);
 apply_redirect();
 
 $render();
 
+assert_not_contains($html, 'changed@domain.com');
 
 
 

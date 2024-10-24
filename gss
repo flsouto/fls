@@ -1,1 +1,2 @@
+echo "[$(git branch --show-current)]"
 git status -s
