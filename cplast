@@ -1,0 +1,40 @@
+#!/bin/bash
+
+# Check if the correct number of arguments is provided
+if [ "$#" -ne 3 ]; then
+    echo "Usage: $0 <source_folder> <destination_folder> <number_of_files>"
+    exit 1
+fi
+
+# Assign arguments to variables
+SOURCE_FOLDER="$1"
+DESTINATION_FOLDER="$2"
+FILE_COUNT="$3"
+
+# Validate that source folder exists
+if [ ! -d "$SOURCE_FOLDER" ]; then
+    echo "Error: Source folder '$SOURCE_FOLDER' does not exist."
+    exit 1
+fi
+
+# Validate that destination folder exists; create if not
+if [ ! -d "$DESTINATION_FOLDER" ]; then
+    echo "Destination folder '$DESTINATION_FOLDER' does not exist. Creating it."
+    mkdir -p "$DESTINATION_FOLDER"
+fi
+
+# Validate that FILE_COUNT is a number
+if ! [[ "$FILE_COUNT" =~ ^[0-9]+$ ]]; then
+    echo "Error: File count must be a number."
+    exit 1
+fi
+
+# Find the last modified files and copy them
+FILES=$(ls -t "$SOURCE_FOLDER" | head -n "$FILE_COUNT")
+
+for FILE in $FILES; do
+    cp "$SOURCE_FOLDER/$FILE" "$DESTINATION_FOLDER"
+    echo "Copied: $FILE"
+done
+
+echo "Copied $FILE_COUNT files from '$SOURCE_FOLDER' to '$DESTINATION_FOLDER'."

@@ -1,0 +1,28 @@
+#!/bin/bash
+
+# Usage: cplast <source_path> <hours> <destination>
+
+# Check for correct number of arguments
+if [ "$#" -ne 3 ]; then
+    echo "Usage: $0 <source_path> <hours> <destination>"
+    exit 1
+fi
+
+# Assign variables based on input
+SOURCE=$1
+HOURS=$2
+DESTINATION=$3
+
+# Check if destination directory exists
+if [ ! -d "$DESTINATION" ]; then
+    echo "Destination directory $DESTINATION does not exist."
+    exit 1
+fi
+
+# Use eval to expand SOURCE
+eval EXPANDED_SOURCE="$SOURCE"
+
+# Find and copy files modified within the last X hours
+find $EXPANDED_SOURCE -type f -mmin -$((HOURS * 60)) -exec cp {} $DESTINATION \;
+
+echo "Files modified within the last $HOURS hours have been copied to $DESTINATION."
