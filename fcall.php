@@ -17,7 +17,7 @@ function fcall($file, $args){
         case 'php':
             require $file;
             $func = str_replace(".$ext","",$file);
-            if($args[0] === '-j'){
+            if(($args[0]??'') === '-j'){
                 $args = array_map(fn($arg) => json_decode($arg,true), array_slice($args,1));
             }
             $result = $func(...$args);
