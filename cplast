@@ -8,8 +8,8 @@ fi
 
 # Assign arguments to variables
 SOURCE_FOLDER="$1"
-DESTINATION_FOLDER="$2"
-FILE_COUNT="$3"
+FILE_COUNT="$2"
+DESTINATION_FOLDER="$3"
 
 # Validate that source folder exists
 if [ ! -d "$SOURCE_FOLDER" ]; then

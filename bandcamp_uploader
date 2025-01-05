@@ -3,6 +3,11 @@
 import pyautogui
 import sys
 from fls import *
+import re
+
+def clean_track_name(filename):
+    # Remove digits at the beginning and ".wav" at the end
+    return re.sub(r'^\d+[ _]*|\.wav$', '', filename)
 
 folder = sys.argv[1]
 offset = int(sys.argv[2]) if len(sys.argv) > 2 else 0
@@ -32,7 +37,7 @@ for index, file in enumerate(files):
 
     locate_and_click('track_name.png')
 
-    pyautogui.write(file)
+    pyautogui.write(clean_track_name(file))
     pyautogui.press('tab')
 
-    sleep(rand(8,15))
+    sleep(rand(25,30))
