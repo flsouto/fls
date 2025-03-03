@@ -26,7 +26,7 @@ retrieve_val() {
         # Copy the password to the clipboard
         local value
         value=$(<"$STORAGE_DIR/$key")   # Read the content of the file
-        value=$(echo "$value" | tr -d '\n' | xargs)  # Remove line breaks and trim whitespace
+        value=$(echo "$value" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
         echo -n "$value" | xclip -selection clipboard  # Change xclip to pbcopy on macOS        
         echo "Value copied to clipboard."
     else
