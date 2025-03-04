@@ -12,13 +12,11 @@ function ytiframe(...$ids){
         foreach($ids as $i=>$id){
             $html .= ($i == $index ? ' &raquo; ' : '' ) . htag('a',[
                 'href' => '?index='.$i,
-                'hotkey' => $i === $index+1 ? 'n' : (($i === $index-1) ? 'p' : null),
+                'hotkey' => $i === $index+1 ? 'n' : ($i === $index-1 ? 'p' : null),
                 $id
             ]) . "<br/>";
         }
     }
-
-    return $html;
 
     return $html;
 }
