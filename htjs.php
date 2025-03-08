@@ -52,5 +52,17 @@ function htjsvisit($href){
     if(is_array($href)){
         $href = htquery($href);
     }
-    return "location.href=".json_encode($href).";";
+    $href = json_encode($href);
+    if(stristr($href,'this.value')){
+        $href .= '.replace("this.value",this.value)';
+    }
+    return "location.href=$href;";
+}
+
+function htjswait($seconds, $action=HtJs::HOOK){
+    return htjs("setTimeout(() => { $action }, $seconds)");
+}
+
+function htjsthen($code, $action=HtJs::HOOK){
+    return htjs("$code;$action;");
 }

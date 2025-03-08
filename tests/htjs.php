@@ -26,3 +26,9 @@ assert_contains_in_order($out,[
     'confirm("Are you sure?")',
     'location.href="?delete=1"',
 ]);
+
+$out = htjswait(500)->visit('this.value');
+assert_contains_in_order($out, ['this.value', 'replace("this.value",this.value)']);
+
+$out = htjswait(500)->then('this.value = this.value.toUpperCase()')->visit('this.value');
+assert_contains_in_order($out, ['this.value', 'UpperCase()', 'replace("this.value",this.value)']);
