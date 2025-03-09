@@ -11,6 +11,7 @@ function ytiframe(...$ids){
     }
 
     $html = htag('input',[
+        'style' => ['padding' => '20px', 'width' => '100%'],
         'placeholder' => 'paste url/id',
         'onpaste' => htjswait(200)->then('this.value = this.value.replace(/^.*?v=/,"")')->visit('?vid=this.value')
     ]);
