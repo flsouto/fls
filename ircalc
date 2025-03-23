@@ -1,0 +1,1 @@
+cat $1 | grep -Pi ${2:-'herois|paypal|stripe'} | cut -d\; -f4 | tr -d '.' | tr ',' '.' | awk '{sum += $1} END {print sum}'

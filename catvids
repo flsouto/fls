@@ -1,0 +1,40 @@
+#!/bin/bash
+
+# Check if at least one video file is provided
+if [ "$#" -lt 2 ]; then
+    echo "Usage: $0 video1.mp4 [video2.mp4 ... videoN.mp4] final_video.mp4"
+    exit 1
+fi
+
+# The last argument is the name of the final output video
+final_output="${@: -1}"
+
+# All arguments except the last one are input videos
+input_videos=("${@:1:$(($#-1))}")
+
+# Temporary directory for fixed videos
+temp_dir=$(mktemp -d)
+
+# Desired frame rate
+frame_rate=30
+
+# Convert all videos to the same frame rate and store them in the temporary directory
+for video in "${input_videos[@]}"; do
+    output_video="$temp_dir/$(basename "$video")"
+    ffmpeg -i "$video" -r $frame_rate -c:v libx264 -c:a aac -strict experimental "$output_video"
+done
+
+# Create a file list for the concat command, ensuring the correct order
+file_list="$temp_dir/filelist.txt"
+for video in "${input_videos[@]}"; do
+    output_video="$temp_dir/$(basename "$video")"
+    echo "file '$output_video'" >> "$file_list"
+done
+
+# Concatenate all the fixed videos
+ffmpeg -f concat -safe 0 -i "$file_list" -c copy "$final_output"
+
+# Cleanup
+rm -r "$temp_dir"
+
+echo "Concatenation complete. Final video is: $final_output"
