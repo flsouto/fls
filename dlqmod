@@ -1,0 +1,81 @@
+#! /bin/python3
+
+import requests
+from bs4 import BeautifulSoup
+import random
+import os
+import zipfile
+
+FILEBASE_URL = "https://www.quaddicted.com/filebase/"
+DOWNLOAD_BASE = "https://www.quaddicted.com/filebase/"
+DOWNLOAD_DIR = "."
+UNZIP_DIR = os.getenv('QUAKE_PATH')
+TRACK_FILE = "dlqmod.txt"
+
+def get_all_mod_files():
+    print("Fetching mod list from filebase...")
+    response = requests.get(FILEBASE_URL)
+    if response.status_code != 200:
+        raise Exception("Failed to load filebase page")
+
+    soup = BeautifulSoup(response.text, 'html.parser')
+    file_links = soup.select('a[href$=".zip"]')
+
+    mod_files = [link.get('href') for link in file_links if link.get('href')]
+    return mod_files
+
+def read_downloaded_mods():
+    if not os.path.exists(TRACK_FILE):
+        return set()
+    with open(TRACK_FILE, 'r') as f:
+        return set(line.strip() for line in f.readlines())
+
+def write_downloaded_mod(mod_name):
+    with open(TRACK_FILE, 'a') as f:
+        f.write(mod_name + '\n')
+
+def download_file(url, dest_folder):
+    os.makedirs(dest_folder, exist_ok=True)
+    filename = url.split('/')[-1]
+    filepath = os.path.join(dest_folder, filename)
+
+    print(f"Downloading: {filename}")
+    response = requests.get(url)
+    if response.status_code == 200:
+        with open(filepath, 'wb') as f:
+            f.write(response.content)
+        print(f"Downloaded to: {filepath}")
+        return filepath
+    else:
+        raise Exception("Download failed")
+
+def unzip_file(zip_path, extract_to):
+    os.makedirs(extract_to, exist_ok=True)
+    with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+        zip_ref.extractall(extract_to)
+    print(f"Unzipped to: {extract_to}")
+
+def main():
+    try:
+        all_mods = get_all_mod_files()
+        downloaded = read_downloaded_mods()
+        remaining_mods = [mod for mod in all_mods if mod not in downloaded]
+
+        if not remaining_mods:
+            print("All available mods have already been downloaded.")
+            return
+
+        selected_mod = random.choice(remaining_mods)
+        full_url = DOWNLOAD_BASE + selected_mod
+        print(f"Selected mod: {selected_mod}")
+
+        zip_path = download_file(full_url, DOWNLOAD_DIR)
+        unzip_target = os.path.join(UNZIP_DIR, selected_mod.replace('.zip', ''))
+        unzip_file(zip_path, unzip_target)
+        os.system('rm '+zip_path)
+        write_downloaded_mod(selected_mod)
+    except Exception as e:
+        print("Error:", e)
+
+if __name__ == "__main__":
+    main()
