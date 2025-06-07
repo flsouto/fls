@@ -5,12 +5,14 @@ from bs4 import BeautifulSoup
 import random
 import os
 import zipfile
+from glob import glob
 
 FILEBASE_URL = "https://www.quaddicted.com/filebase/"
 DOWNLOAD_BASE = "https://www.quaddicted.com/filebase/"
 DOWNLOAD_DIR = "."
+QPATH = os.getenv('QUAKE_PATH')
 UNZIP_DIR = os.getenv('QUAKE_PATH')
-TRACK_FILE = "dlqmod.txt"
+TRACK_FILE = os.getenv('FLS_PATH') + "/dlqmod.txt"
 
 def get_all_mod_files():
     print("Fetching mod list from filebase...")
@@ -70,9 +72,15 @@ def main():
         print(f"Selected mod: {selected_mod}")
 
         zip_path = download_file(full_url, DOWNLOAD_DIR)
-        unzip_target = os.path.join(UNZIP_DIR, selected_mod.replace('.zip', ''))
+        mod_name = selected_mod.replace('.zip', '')
+        unzip_target = os.path.join(UNZIP_DIR,mod_name)
         unzip_file(zip_path, unzip_target)
         os.system('rm '+zip_path)
+        os.system(f"cp {QPATH}/id1/config.cfg {unzip_target}")
+        pak_files = glob(f"{unzip_target}/*.pak")
+        if len(pak_files) < 1:
+            os.system(f"mkdir {unzip_target}/maps && mv {unzip_target}/*.{bsp,BSP} {unzip_target}/maps/")
+            os.system(f"echo 'map {mod_name}' >> {unzip_target}/config.cfg")
         write_downloaded_mod(selected_mod)
     except Exception as e:
         print("Error:", e)
