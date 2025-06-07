@@ -79,7 +79,7 @@ def main():
         os.system(f"cp {QPATH}/id1/config.cfg {unzip_target}")
         pak_files = glob(f"{unzip_target}/*.pak")
         if len(pak_files) < 1:
-            os.system(f"mkdir {unzip_target}/maps && mv {unzip_target}/*.{bsp,BSP} {unzip_target}/maps/")
+            os.system(f"mkdir {unzip_target}/maps && mv {unzip_target}/*.bsp {unzip_target}/maps/")
             os.system(f"echo 'map {mod_name}' >> {unzip_target}/config.cfg")
         write_downloaded_mod(selected_mod)
     except Exception as e:

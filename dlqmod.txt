@@ -3,3 +3,6 @@ fc.zip
 fearfall.zip
 stupid.zip
 cda.zip
+quarantine02.zip
+jdungeon.zip
+nullbear.zip
