@@ -1,0 +1,2 @@
+unset AWS_ACCESS_KEY_ID
+export AWS_PROFILE=$1
