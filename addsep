@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# Usage: ./insert_every_n_lines.sh input.txt "TEXT_TO_INSERT" N > output.txt
+
+input_file="$1"
+insert_text="$2"
+n="$3"
+
+awk -v text="$insert_text" -v n="$n" '{
+    print
+    if (NR % n == 0) print text
+}' "$input_file" > /tmp/addsep
+
+cat /tmp/addsep > $input_file

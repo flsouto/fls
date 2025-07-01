@@ -6,3 +6,8 @@ cda.zip
 quarantine02.zip
 jdungeon.zip
 nullbear.zip
+mfxsp6.zip
+coagula2_flesh.zip
+thepyram.zip
+metro.zip
+tmi.zip
