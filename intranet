@@ -1,0 +1,127 @@
+#!/bin/python3
+import os
+import sys
+import json
+import http.server
+import socketserver
+import urllib.parse
+import subprocess
+import socket
+import threading
+
+lock = threading.Lock()
+
+# Defaults
+DEFAULT_BASE_FOLDER = '.'
+DEFAULT_CONTROL_PORT = 8000
+START_PORT = 8000
+MAX_PORT = 9000
+SERV_NAME = 'serv'
+
+# Parse args
+if len(sys.argv) >= 3:
+    BASE_FOLDER = sys.argv[1]
+    PORT = int(sys.argv[2])
+elif len(sys.argv) == 2:
+    BASE_FOLDER = sys.argv[1]
+    PORT = DEFAULT_CONTROL_PORT
+else:
+    BASE_FOLDER = DEFAULT_BASE_FOLDER
+    PORT = DEFAULT_CONTROL_PORT
+
+STATE_FILE = os.path.join(BASE_FOLDER, 'state.json')
+
+# Load or initialize state
+if os.path.exists(STATE_FILE):
+    with open(STATE_FILE, 'r') as f:
+        state = json.load(f)
+else:
+    state = {}
+
+def save_state():
+    with open(STATE_FILE, 'w') as f:
+        json.dump(state, f)
+
+def is_port_in_use(port):
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        return s.connect_ex(('localhost', port)) == 0
+
+def find_next_available_port():
+    for port in range(START_PORT, MAX_PORT):
+        if not is_port_in_use(port):
+            return port
+    raise Exception("No available ports!")
+
+def list_folders_with_serv():
+    return [
+        d for d in os.listdir(BASE_FOLDER)
+        if d != 'fls' and
+           os.path.isdir(os.path.join(BASE_FOLDER, d)) and
+           os.access(os.path.join(BASE_FOLDER, d, SERV_NAME), os.X_OK)
+    ]
+
+def start_serv_script(folder, port):
+    folder_path = os.path.join(BASE_FOLDER, folder)
+    try:
+        script_path = os.path.abspath(os.path.join(folder_path, SERV_NAME))
+        print(f"Launching {script_path} on port {port}")
+        os.system(f"cd {folder_path}; ./serv {port} &")
+    except Exception as e:
+        print(f"Error launching serv in '{folder_path}' on port {port}: {e}")
+
+class Handler(http.server.SimpleHTTPRequestHandler):
+    def do_GET(self):
+        if 'favico' in self.path:
+            return
+        parsed = urllib.parse.urlparse(self.path)
+        path = parsed.path.lstrip('/')
+
+        if not path:
+            self.send_response(200)
+            self.send_header('Content-type', 'text/html')
+            self.end_headers()
+            folders = list_folders_with_serv()
+            self.wfile.write(b"<h1>Available Projects</h1><ul>")
+            for folder in folders:
+                self.wfile.write(f'<li><a href="/{folder}">{folder}</a></li>'.encode())
+            self.wfile.write(b"</ul>")
+            return
+
+        folder = path
+        with lock:
+            port = state.get(folder)
+            if port:
+                if is_port_in_use(port):
+                    self.send_redirect(port)
+                    return
+                else:
+                    # Restart it
+                    start_serv_script(folder, port)
+                    self.send_redirect(port)
+                    return
+            else:
+                # New script
+                port = find_next_available_port()
+                start_serv_script(folder, port)
+                state[folder] = port
+                save_state()
+                self.send_redirect(port)
+
+    def send_redirect(self, port):
+        host = self.headers.get('Host', 'localhost').split(':')[0]
+        redirect_url = f'http://{host}:{port}/'  # trailing slash fixes 404 issues
+        print(f"Redirecting to {redirect_url}")
+        self.send_response(302)
+        self.send_header('Location', redirect_url)
+        self.end_headers()
+
+class ReusableTCPServer(socketserver.TCPServer):
+    allow_reuse_address = True
+
+def run():
+    with ReusableTCPServer(("0.0.0.0", PORT), Handler) as httpd:
+        print(f"Server started on port {PORT}, scanning folders in: {BASE_FOLDER}")
+        httpd.serve_forever()
+
+if __name__ == '__main__':
+    run()
