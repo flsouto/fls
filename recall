@@ -18,24 +18,49 @@ store_val() {
     fi
 }
 
-# Function to retrieve a password
+# Function to get a value for a given key
+get_val() {
+    local key="$1"
+    if [[ ! -f "$STORAGE_DIR/$key" ]]; then
+        echo "No value found for key: $key" >&2
+        return 1
+    fi
+    local value
+    value=$(<"$STORAGE_DIR/$key")   # Read the content of the file
+    value=$(echo "$value" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
+    echo -n "$value"
+}
+
+
+# Function to retrieve a password to clipboard
 retrieve_val() {
     local key="$1"
-
-    if [[ -f "$STORAGE_DIR/$key" ]]; then
-        # Copy the password to the clipboard
-        local value
-        value=$(<"$STORAGE_DIR/$key")   # Read the content of the file
-        value=$(echo "$value" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
-        echo -n "$value" | xclip -selection clipboard  # Change xclip to pbcopy on macOS        
-        echo "Value copied to clipboard."
-    else
-        echo "No value found for key: $key"
+    local value
+    value=$(get_val "$key")
+    if [[ $? -ne 0 ]]; then
+        echo "$value"
+        return 1
     fi
+    echo -n "$value" | xclip -selection clipboard  # Change xclip to pbcopy on macOS
+    echo "Value copied to clipboard."
 }
 
 # Main script logic
-if [[ $# -eq 2 ]]; then
+if [[ $# -eq 3 ]]; then
+    if [ "$2" = "-c" ]; then
+        key="$1"
+        command="$3"
+        value=$(get_val "$key")
+        if [[ $? -ne 0 ]]; then
+            echo "$value"
+            exit 1
+        fi
+        $command "$value"
+    else
+        echo "Usage: recall key -c <command>"
+        exit 1
+    fi
+elif [[ $# -eq 2 ]]; then
     if [ "$2" = "-o" ]; then
         cat "$STORAGE_DIR/$1"
     else
@@ -45,5 +70,7 @@ elif [[ $# -eq 1 ]]; then
     retrieve_val "$1"
 else
     echo "Usage: recall key [value]"
-    echo "Use recall key to store a value or recall key to retrieve it."
+    echo "       recall key"
+    echo "       recall key -o"
+    echo "       recall key -c <command>"
 fi
