@@ -1,0 +1,45 @@
+#!/bin/bash
+
+# Usage: ./dump_schema.sh "postgresql://user:pass@host:port/dbname"
+
+CONN_STR=$(recall $1 -o)
+CACHE_DIR=~/.pgddl
+
+if [ -z "$CONN_STR" ]; then
+  echo "Usage: $0 <connection_string>"
+  exit 1
+fi
+
+# Create cache directory if it doesn't exist
+mkdir -p "$CACHE_DIR"
+
+# Generate a hash of the connection string
+HASH=$1
+OUTPUT_FILE="$CACHE_DIR/$HASH.sql"
+
+# Use cached version if exists
+if [ -f "$OUTPUT_FILE" ]; then
+  cat $OUTPUT_FILE
+  exit 0
+fi
+
+# Get server version
+SERVER_VERSION=$(psql "$CONN_STR" -t -c "SHOW server_version;" | tr -d '[:space:]')
+SERVER_MAJOR=$(echo "$SERVER_VERSION" | cut -d. -f1)
+
+# Check local pg_dump version
+if command -v pg_dump > /dev/null; then
+  LOCAL_VERSION=$(pg_dump --version | awk '{print $3}')
+  LOCAL_MAJOR=$(echo "$LOCAL_VERSION" | cut -d. -f1)
+else
+  LOCAL_MAJOR=""
+fi
+
+# Export schema
+if [ "$SERVER_MAJOR" == "$LOCAL_MAJOR" ]; then
+  pg_dump "$CONN_STR" --schema-only --file="$OUTPUT_FILE"
+else
+  docker run --rm -v "$PWD/$CACHE_DIR:/backup" postgres:$SERVER_MAJOR \
+    pg_dump "$CONN_STR" --schema-only --file=/backup/$HASH.sql
+fi
+cat $OUTPUT_FILE
