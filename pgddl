@@ -39,7 +39,7 @@ fi
 if [ "$SERVER_MAJOR" == "$LOCAL_MAJOR" ]; then
   pg_dump "$CONN_STR" --schema-only --file="$OUTPUT_FILE"
 else
-  docker run --rm -v "$PWD/$CACHE_DIR:/backup" postgres:$SERVER_MAJOR \
+  docker run --rm -v "$CACHE_DIR:/backup" postgres:$SERVER_MAJOR \
     pg_dump "$CONN_STR" --schema-only --file=/backup/$HASH.sql
 fi
 cat $OUTPUT_FILE

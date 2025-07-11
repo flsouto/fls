@@ -1,1 +1,1 @@
-pgddl $1 | gemini -p " Based on the DDL provided, create a query to $2. Output only the generated query and nothing else."
+pgddl $1 | gemini -p " Based on the DDL provided, create a sql to $2. Output only the generated sql and nothing else."
