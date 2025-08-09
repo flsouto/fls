@@ -1,0 +1,7 @@
+if [[ ! -z $1 ]]; then
+    xclip -selection clipboard $1
+else
+    xclip -selection clipboard /tmp/cb
+    rm /tmp/cb
+
+fi
