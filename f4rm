@@ -1,0 +1,79 @@
+# Load config if it exists
+CONFIG_FILE=".f4rmrc"
+if [[ -f "$CONFIG_FILE" ]]; then
+    # shellcheck disable=SC1090
+    source "$CONFIG_FILE"
+else
+    echo "Error: No $CONFIG_FILE found. Please create one with at least:"
+    echo "  target_file=/path/to/file"
+fi
+
+# Defaults
+: "${stash_dir:=./stash}"
+: "${commit_dir:=./commits}"
+
+# Check required var
+if [[ -z "$target_file" ]]; then
+    echo "Error: target_file not defined in $CONFIG_FILE"
+fi
+
+# Utility: get MD5 hash and extension
+get_md5_and_ext() {
+    local file="$1"
+    local md5
+    md5=$(md5sum "$file" | awk '{print $1}')
+    local ext="${file##*.}"
+    echo "$md5" "$ext"
+}
+
+# s: stash only
+s() {
+    source "$CONFIG_FILE"
+    local md5 ext
+    read -r md5 ext <<<"$(get_md5_and_ext "$target_file")"
+    mkdir -p "$stash_dir"
+    cp "$target_file" "$stash_dir/${md5}.${ext}"
+    echo "Stashed: $stash_dir/${md5}.${ext}"
+}
+
+# c: commit + stash
+c() {
+    source "$CONFIG_FILE"
+    local md5 ext
+    read -r md5 ext <<<"$(get_md5_and_ext "$target_file")"
+    mkdir -p "$stash_dir" "$export_dir"
+    cp "$target_file" "$stash_dir/${md5}.${ext}"
+    cp "$target_file" "$commit_dir/${md5}.${ext}"
+    echo "Commited: $commit_dir/${md5}.${ext}"
+}
+
+# x: stash + commit with x prefix
+x() {
+    source "$CONFIG_FILE"
+    local md5 ext
+    read -r md5 ext <<<"$(get_md5_and_ext "$target_file")"
+    mkdir -p "$stash_dir" "$pub_dir"
+    cp "$target_file" "$stash_dir/${md5}.${ext}"
+    cp "$target_file" "$commit_dir/x${md5}.${ext}"
+    echo "Commited with x prefix: $commit_dir/exc${md5}.${ext}"
+}
+
+# f: forward command
+f() {
+    source "$CONFIG_FILE"
+    if [[ -n "$forward_cmd" ]]; then
+        eval "$forward_cmd"
+    else
+        echo "forward_cmd is not defined in $CONFIG_FILE"
+    fi
+}
+
+# r: replay command
+r() {
+    source "$CONFIG_FILE"
+    if [[ -n "$replay_cmd" ]]; then
+        eval "$replay_cmd"
+    else
+        echo "replay_cmd is not defined in $CONFIG_FILE"
+    fi
+}

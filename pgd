@@ -1,0 +1,32 @@
+#!/bin/bash
+
+# Usage: ./dump_schema.sh "postgresql://user:pass@host:port/dbname"
+
+CONN_STR=$(recall $1 -o)
+SCHEMA=${2:-public}
+
+if [ -z "$CONN_STR" ]; then
+  echo "Usage: $0 <connection_string>"
+  exit 1
+fi
+
+# Get server version
+SERVER_VERSION=$(psql "$CONN_STR" -t -c "SHOW server_version;" | tr -d '[:space:]')
+SERVER_MAJOR=$(echo "$SERVER_VERSION" | cut -d. -f1)
+
+# Check local pg_dump version
+if command -v pg_dump > /dev/null; then
+  LOCAL_VERSION=$(pg_dump --version | awk '{print $3}')
+  LOCAL_MAJOR=$(echo "$LOCAL_VERSION" | cut -d. -f1)
+else
+  LOCAL_MAJOR=""
+fi
+
+# Export schema
+if [ "$SERVER_MAJOR" == "$LOCAL_MAJOR" ]; then
+  pg_dump "$CONN_STR" --schema=$SCHEMA --file="dump.sql"
+else
+  docker run --rm -v ".:/backup" postgres:$SERVER_MAJOR \
+    pg_dump "$CONN_STR" --schema=$SCHEMA --file=/backup/dump.sql
+fi
+cat dump.sql
