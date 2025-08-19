@@ -20,3 +20,6 @@ hc1extndagain.zip
 city.zip
 tempio.zip
 wtot.zip
+sm110_pack.zip
+borg.zip
+oldhouse.zip
