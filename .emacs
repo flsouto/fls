@@ -105,7 +105,7 @@
   :mode ("\\.rs\\'" . rust-mode))
 
 (global-set-key (kbd "C-o") 'save-buffer)      ;; ^O Write Out
-(global-set-key (kbd "C-q") 'save-buffers-kill-terminal) ;; ^X Exit
+(global-set-key (kbd "C-x C-x") 'save-buffers-kill-terminal) ;; ^X Exit
 (global-set-key (kbd "M-u") 'undo)
 (global-set-key (kbd "C-u") 'yank)
 
