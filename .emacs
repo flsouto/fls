@@ -3,7 +3,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages '(projectile web-mode counsel ivy cmake-mode)))
+ '(package-selected-packages '(rust-mode projectile web-mode counsel ivy cmake-mode)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -37,7 +37,7 @@
   :mode ("\\.tsx\\'" . web-mode))
 
 (setq counsel-rg-base-command
-      "rg -S --no-heading --line-number --color never --glob '!.git/*' --glob '!node_modules/*' %s .")
+      "rg --no-heading --line-number --color never --glob '!node_modules/*' --glob '!.git/*' %s .")
 
 (use-package projectile
   :ensure t
@@ -99,4 +99,10 @@
 
 ;; Remove bottom infos
 (setq-default mode-line-format nil)
+
+(use-package rust-mode
+  :ensure t
+  :mode ("\\.rs\\'" . rust-mode))
+
+
 
