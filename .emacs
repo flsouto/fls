@@ -85,7 +85,7 @@
 
 (use-package counsel
   :ensure t
-  :bind (("C-c s" . counsel-rg)))
+  :bind (("C-g" . counsel-rg)))
 
 ;; Hide top menu
 (menu-bar-mode -1)
@@ -103,6 +103,20 @@
 (use-package rust-mode
   :ensure t
   :mode ("\\.rs\\'" . rust-mode))
+
+(global-set-key (kbd "C-o") 'save-buffer)      ;; ^O Write Out
+(global-set-key (kbd "C-q") 'save-buffers-kill-terminal) ;; ^X Exit
+(global-set-key (kbd "M-u") 'undo)
+(global-set-key (kbd "C-u") 'yank)
+
+(defun my-kill-line-or-region ()
+  "Kill the whole line if no region is active, otherwise kill the region."
+  (interactive)
+  (if (use-region-p)
+      (kill-region (region-beginning) (region-end))
+    (kill-whole-line)))
+
+(global-set-key (kbd "C-k") 'my-kill-line-or-region)
 
 
 
