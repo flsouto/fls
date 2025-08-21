@@ -1,8 +1,5 @@
 source .bkprc
 
-bkp1="./commits/*wav $BKP1/w4v"
-bkp2="./commits/*wav $BKP2/w4v"
-
 for i in {1..9}; do
     bkpvar=bkp$i
     if [[ -n ${!bkpvar} ]]; then
