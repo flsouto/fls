@@ -68,12 +68,12 @@ f() {
     fi
 }
 
-# r: replay command
+# r: run command
 r() {
     source "$CONFIG_FILE"
-    if [[ -n "$replay_cmd" ]]; then
-        eval "$replay_cmd"
+    if [[ -n "$run_cmd" ]]; then
+        eval "$run_cmd"
     else
-        echo "replay_cmd is not defined in $CONFIG_FILE"
+        echo "run_cmd is not defined in $CONFIG_FILE"
     fi
 }
