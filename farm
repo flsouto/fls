@@ -62,7 +62,7 @@ x() {
 f() {
     source "$CONFIG_FILE"
     if [[ -n "$forward_cmd" ]]; then
-        eval "$forward_cmd"
+        eval "$forward_cmd && $run_cmd" 
     else
         echo "forward_cmd is not defined in $CONFIG_FILE"
     fi

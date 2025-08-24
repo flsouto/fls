@@ -1,0 +1,6 @@
+
+top_pane=$(tmux list-panes -F '#{pane_index} #{pane_top}' | sort -k2n | head -n1 | awk '{print $1}')
+
+rg --glob '!node_modules/*' --glob '!.git/*' --line-number --no-heading --color=never "" |\
+  fzf --delimiter : --bind "enter:execute(tmux select-pane -U && tmux send-keys -t $top_pane  C-r '{1}' C-m)+abort"
+
