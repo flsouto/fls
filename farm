@@ -53,9 +53,21 @@ x() {
     local md5 ext
     read -r md5 ext <<<"$(get_md5_and_ext "$target_file")"
     mkdir -p "$stash_dir" "$commit_dir"
-    cp "$target_file" "$stash_dir/x${md5}.${ext}"
-    cp "$target_file" "$commit_dir/x${md5}.${ext}"
-    echo "Commited with x prefix: $commit_dir/x${md5}.${ext}"
+    cp "$target_file" "$stash_dir/$1x${md5}.${ext}"
+    cp "$target_file" "$commit_dir/$1x${md5}.${ext}"
+    echo "Commited with x prefix: $commit_dir/$1x${md5}.${ext}"
+}
+
+xxxxx() {
+    x 5
+}
+
+xxxx() {
+    x 4
+}
+
+xxx() {
+    x 3
 }
 
 # f: forward command
