@@ -70,6 +70,10 @@ xxx() {
     x 3
 }
 
+xx() {
+    x 2
+}
+
 # f: forward command
 f() {
     source "$CONFIG_FILE"

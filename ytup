@@ -68,7 +68,7 @@ function uploadVideo(auth, title, description, tags) {
     }
     if(response.data.id){
         console.log('New ID: '+response.data.id);
-        fs.appendFileSync('.ytids', response.data.id);
+        fs.appendFileSync('.ytids', response.data.id+"\n");
     } else {
         console.error("Could not upload");
         // todo notify via email
