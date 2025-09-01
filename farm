@@ -47,6 +47,8 @@ c() {
     echo "Commited: $commit_dir/${md5}.${ext}"
 }
 
+cc() { c; }
+
 # x: stash + commit with x prefix
 x() {
     source "$CONFIG_FILE"
@@ -58,21 +60,13 @@ x() {
     echo "Commited with x prefix: $commit_dir/$1x${md5}.${ext}"
 }
 
-xxxxx() {
-    x 5
-}
+xx() { x 2; }
+xxx() { x 3; }
+xxxx() { x 4; }
+xxxxx() { x 5; }
 
-xxxx() {
-    x 4
-}
 
-xxx() {
-    x 3
-}
 
-xx() {
-    x 2
-}
 
 # f: forward command
 f() {
