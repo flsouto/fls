@@ -40,4 +40,4 @@ for index, file in enumerate(files):
     pyautogui.write(clean_track_name(file))
     pyautogui.press('tab')
 
-    sleep(rand(25,30))
+    sleep(rand(15,20))
