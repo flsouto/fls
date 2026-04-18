@@ -19,6 +19,13 @@ if(isset($argv[1])){
         if(!$found){
             $data = [];
         }
+    } else if(strstr($argv[1],':')) {
+        [$k,$v] = explode(':', $argv[1]);
+        $result = [];
+        foreach($data as $row){
+            $result[$row[$k]] = $row[$v];
+        }
+        $data = $result;
     } else {
         $data = array_column($data, $argv[1]);
     }
