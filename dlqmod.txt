@@ -46,3 +46,8 @@ jason1.zip
 coagula3_bone.zip
 sm176_pack.zip
 orlmaps.zip
+unholy.zip
+sm146_pack.zip
+kjsp1.zip
+e2m10.zip
+base-n.zip
