@@ -36,8 +36,12 @@ class JsonDB extends ArrayObject{
         return $this[$k]??null;
     }
 
+    function __toString(){
+        return json_encode($this->getArrayCopy(), JSON_PRETTY_PRINT);
+    }
+
     function save(){
-        file_put_contents($this->file, json_encode($this->getArrayCopy(), JSON_PRETTY_PRINT));
+        file_put_contents($this->file, "$this");
     }
 }
 

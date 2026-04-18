@@ -1,0 +1,8 @@
+alias search='php search.php'
+alias tabs='php tabs.php'
+alias clear='rm data/*.json'
+alias view='php view.php'
+alias fetch='php fetch.php'
+alias scan='php scan.php'
+alias copy='cb view.json'
+alias cols='php cols.php'
