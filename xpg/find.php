@@ -45,8 +45,10 @@ function find(string $table, $terms, $columns=null): array {
 
 $search = [];
 foreach(array_slice($argv,2) as $value){
-    if($value == '@view'){
-        $search = [...$search, ...jsondb('data/view.json')->vals()];
+    if($value == '@v'){
+        $search = [...$search, ...jsondb(__DIR__.'/data/view.json')->vals()];
+    } else if ($value == '@i') {
+        $search = [...$search, ...jsondb(__DIR__.'/data/input.json')->vals()];
     } else {
         $search[] = $value;
     }
@@ -58,6 +60,24 @@ if(stristr($argv[1],'.')){
 } else {
     $table = $argv[1];
     $col = null;
+}
+
+
+if(!isset($schema['types'][$table])){
+    $matches = [];
+    foreach($schema['types'] as $k=>$v){
+        if(strtolower($table)==strtolower($k)){
+            $matches = [$k];
+            break;
+        }
+        if(stristr($k,$table)){
+            $matches[] = $k;
+        }
+    }
+    if(count($matches) > 1){
+        die("No table '$table'. Found matches: ".implode(', ', $matches)."\n");
+    }
+    $table = $matches[0];
 }
 
 $rows = find($table,$search,$col);

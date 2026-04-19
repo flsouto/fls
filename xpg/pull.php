@@ -23,7 +23,7 @@ if(strstr($argv[1],'.')){
     } else if(isjson($tab['table'],$col1)) {
         $select = 'self."'.$col1.'"->>\''.$col2.'\'';
     } else {
-        die("Expression could not be resoved: $argv[1]");
+        die("Expression could not be resolved: $argv[1]\n");
     }
 }
 

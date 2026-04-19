@@ -3,7 +3,7 @@ dir=$FLS_PATH/xpg
 alias find='php $dir/find.php'
 alias tab='php $dir/tabs.php'
 alias tabs='php $dir/tabs.php'
-alias clear='rm $dir/data/{state,t[0-9]*}.json'
+alias flush='rm $dir/data/{state,t[0-9]*}.json'
 alias view='php $dir/view.php'
 alias pull='php $dir/pull.php'
 alias scan='php $dir/scan.php'
@@ -22,3 +22,20 @@ script() {
     php $LAST_SCRIPT
 }
 
+input() {
+    echo "" > /tmp/input
+    echo "" > $dir/data/input.json
+    nano /tmp/input
+    if jq -e . /tmp/input >/dev/null 2>&1; then
+      mv /tmp/input $dir/data/input.json
+    else
+      jq -R . /tmp/input | jq -s . > $dir/data/input.json
+    fi
+    
+    cat $dir/data/input.json
+}
+
+ifind() {
+    input
+    find $1 @i
+}
