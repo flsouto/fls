@@ -13,6 +13,10 @@ class JsonDB extends ArrayObject{
         return array_keys($this->getArrayCopy());
     }
 
+    function vals(){
+        return array_values($this->getArrayCopy());
+    }
+
     function fstk(){
         $keys = $this->keys();
         return $keys[0] ?? null;

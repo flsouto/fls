@@ -1,15 +1,17 @@
 dir=$FLS_PATH/xpg
 
-alias search='php $dir/search.php'
+alias find='php $dir/find.php'
 alias tab='php $dir/tabs.php'
+alias tabs='php $dir/tabs.php'
 alias clear='rm $dir/data/{state,t[0-9]*}.json'
 alias view='php $dir/view.php'
-alias fetch='php $dir/fetch.php'
+alias pull='php $dir/pull.php'
 alias scan='php $dir/scan.php'
 alias copy='cb $dir/data/view.json'
 alias cols='php $dir/cols.php'
 alias our='php $dir/our.php'
-alias rels='php $dir/rels.php';
+alias rels='php $dir/rels.php'
+alias tables='php $dir/tables.php'
 
 script() {
     LAST_SCRIPT=$dir/data/script$1.php

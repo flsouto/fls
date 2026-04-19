@@ -1,4 +1,4 @@
-<?php require_once(__DIR__."/../utils.php"); $data = json_decode(file_get_contents(__DIR__."/view.json"), true);
+<?php require_once(__DIR__."/../boot.php"); $data = jsondb(__DIR__."/view.json");
 
 foreach($data as $k => $v){
     print_r($v);

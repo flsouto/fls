@@ -29,6 +29,9 @@ if(isset($argv[1])){
         $data = $result;
     } else {
         $data = array_column($data, $argv[1]);
+        if(getenv('uniq')){
+            $data = array_values(array_unique($data));
+        }
     }
 }
 
