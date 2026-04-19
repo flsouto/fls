@@ -12,6 +12,7 @@ if(isset($argv[1])){
         foreach($tab['data'] as $row){
             if($row['index'] == $argv[1]){
                 $data = qrow('SELECT * FROM "'.$tab['table'].'" WHERE id=?',[$row['id']]);
+                $data = decrow($tab['table'], $data);
                 $found = true;
                 break;
             }

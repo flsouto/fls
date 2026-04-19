@@ -4,7 +4,30 @@ require_once(__DIR__."/boot.php");
 
 $ids = array_column($tab['data'],'id');
 
-$result = qkv('SELECT id, "'.$argv[1].'" FROM "'.$tab['table'].'" WHERE id IN(?)', [$ids]);
+$select = 'self."'.$argv[1].'"';
+
+$join = '';
+
+if(strstr($argv[1],'.')){
+    [$col1,$col2] = explode('.', $argv[1]);
+    $parent = null;
+    foreach($schema['relations'] as $rel){
+        if($rel['child'] == $tab['table'] && $rel['fk']==$col1){
+            $parent = $rel['parent'];
+            break;
+        }
+    }
+    if($parent){
+        $select = 'parent."'.$col2.'"';
+        $join = 'JOIN "'.$parent.'" parent ON parent.id=self."'.$col1.'"';
+    } else if(isjson($tab['table'],$col1)) {
+        $select = 'self."'.$col1.'"->>\''.$col2.'\'';
+    } else {
+        die("Expression could not be resoved: $argv[1]");
+    }
+}
+
+$result = qkv('SELECT self.id, '.$select.' FROM "'.$tab['table'].'" self '.$join.' WHERE self.id IN(?)', [$ids]);
 
 foreach($tab['data'] as &$row){
     $value = &$result[$row['id']];
@@ -14,4 +37,4 @@ foreach($tab['data'] as &$row){
 
 $tab->save();
 
-passthru('php view.php');
+view();

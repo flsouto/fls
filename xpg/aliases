@@ -1,8 +1,12 @@
-alias search='php search.php'
-alias tabs='php tabs.php'
-alias clear='rm data/*.json'
-alias view='php view.php'
-alias fetch='php fetch.php'
-alias scan='php scan.php'
-alias copy='cb view.json'
-alias cols='php cols.php'
+dir=$FLS_PATH/xpg
+
+alias search='php $dir/search.php'
+alias tabs='php $dir/tabs.php'
+alias clear='rm $dir/data/{state,t[0-9]*}.json'
+alias view='php $dir/view.php'
+alias fetch='php $dir/fetch.php'
+alias scan='php $dir/scan.php'
+alias copy='cb $dir/view.json'
+alias cols='php $dir/cols.php'
+alias our='php $dir/our.php'
+alias rels='php $dir/rels.php';
