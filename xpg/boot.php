@@ -4,10 +4,12 @@ require_once(__DIR__."/db.php");
 require_once(__DIR__."/utils.php");
 require_once(__DIR__."/../jsondb.php");
 
-$state = jsondb('data/state.json');
+$data_dir = getenv('XPG_DATA_DIR') ?: 'data';
+
+$state = jsondb($data_dir.'/state.json');
 
 if($state['tid']??''){
-    $tab = jsondb("data/t$state[tid].json");
+    $tab = jsondb($path=$data_dir."/t$state[tid].json");
 }
 
-$schema = jsondb("data/schema.json");
+$schema = jsondb($data_dir."/schema.json");

@@ -46,9 +46,9 @@ function find(string $table, $terms, $columns=null): array {
 $search = [];
 foreach(array_slice($argv,2) as $value){
     if($value == '@v'){
-        $search = [...$search, ...jsondb(__DIR__.'/data/view.json')->vals()];
+        $search = [...$search, ...jsondb($data_dir.'/view.json')->vals()];
     } else if ($value == '@i') {
-        $search = [...$search, ...jsondb(__DIR__.'/data/input.json')->vals()];
+        $search = [...$search, ...jsondb($data_dir.'/input.json')->vals()];
     } else {
         $search[] = $value;
     }

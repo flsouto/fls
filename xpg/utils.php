@@ -35,7 +35,7 @@ function view(){
 }
 
 function newtab($table,$rows,$name){
-    global $state;
+    global $state,$data_dir;
     $state['tid'] = $tid = count($state['tabs']??[])+1;
     $state['tabs'][] = [
         'id' => $tid,
@@ -44,7 +44,7 @@ function newtab($table,$rows,$name){
     ];
     $state->save();
 
-    $tab = jsondb("data/t$tid.json");
+    $tab = jsondb("$data_dir/t$tid.json");
     $tab['id'] = $tid;
     $tab['name'] = $name;
     $tab['table'] = $table;

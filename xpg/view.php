@@ -37,7 +37,7 @@ if(isset($argv[1])){
 
 $json = jsonstr($data);
 
-file_put_contents('data/view.json', $json);
+file_put_contents($data_dir.'/view.json', $json);
 
 echo $json;
 
