@@ -33,8 +33,15 @@ function find(string $table, $terms, $columns=null): array {
         }
     }
 
+    $select = ['id'];
+    $common_cols = ['name','title','subject','slug','key','email','created_at','createdAt','type','status','active','role'];
+    foreach($common_cols as $col){
+        if(isset($schema['types'][$table][$col])){
+            $select[] = '"'.$col.'"';
+        }
+    }
     $sql = sprintf(
-        'SELECT id FROM "%s" WHERE %s',
+        'SELECT '.implode(',',$select).' FROM "%s" WHERE %s',
         $table,
         implode(' OR ', $conditions)
     );
