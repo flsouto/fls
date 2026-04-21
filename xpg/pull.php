@@ -8,20 +8,25 @@ $select = 'self."'.$argv[1].'"';
 
 $join = '';
 
+$isjson = false;
 if(strstr($argv[1],'.')){
-    [$col1,$col2] = explode('.', $argv[1]);
+    $props = explode('.', $argv[1]);
     $parent = null;
     foreach($schema['relations'] as $rel){
-        if($rel['child'] == $tab['table'] && $rel['fk']==$col1){
+        if($rel['child'] == $tab['table'] && $rel['fk']==$props[0]){
             $parent = $rel['parent'];
             break;
         }
     }
     if($parent){
-        $select = 'parent."'.$col2.'"';
-        $join = 'JOIN "'.$parent.'" parent ON parent.id=self."'.$col1.'"';
-    } else if(isjson($tab['table'],$col1)) {
-        $select = 'self."'.$col1.'"->>\''.$col2.'\'';
+        $select = 'parent."'.$props[1].'"';
+        $join = 'JOIN "'.$parent.'" parent ON parent.id=self."'.$props[0].'"';
+    } else if(isjson($tab['table'],$props[0])) {
+        $isjson = true;
+        $select = 'self."'.$props[0].'"';
+        foreach(array_slice($props,1) as $p){
+            $select .= "->'$p'";
+        }
     } else {
         die("Expression could not be resolved: $argv[1]\n");
     }
@@ -31,7 +36,11 @@ $result = qkv('SELECT self.id, '.$select.' FROM "'.$tab['table'].'" self '.$join
 
 foreach($tab['data'] as &$row){
     $value = &$result[$row['id']];
-    $value = decval($tab['table'], $argv[1], $value);
+    if($isjson){
+        $value = json_decode($value,true);
+    } else {
+        $value = decval($tab['table'], $argv[1], $value);
+    }
     $row[$argv[1]] = $value;
 }
 
