@@ -53,6 +53,7 @@ foreach(array_slice($argv,2) as $value){
     }
 }; unset($value);
 
+$search = array_filter(array_unique($search));
 
 if(stristr($argv[1],'.')){
     [$table,$col] = explode('.',$argv[1]);

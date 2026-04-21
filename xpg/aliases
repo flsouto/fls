@@ -31,7 +31,7 @@ input() {
     if jq -e . /tmp/input >/dev/null 2>&1; then
       mv /tmp/input $data_dir/input.json
     else
-      jq -R . /tmp/input | jq -s . > $data_dir/input.json
+      php $dir/parse.php
     fi
     
     cat $data_dir/input.json
