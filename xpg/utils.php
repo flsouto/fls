@@ -2,7 +2,7 @@
 
 function jsonstr($data){
 
-    $json = json_encode($data,JSON_PRETTY_PRINT);
+    $json = json_encode($data,JSON_PRETTY_PRINT ^ JSON_UNESCAPED_UNICODE);
 
     $json = preg_replace_callback('/^( +)/m', function ($matches) {
         return str_repeat(' ', strlen($matches[1]) / 2);

@@ -6,17 +6,20 @@ $input = array_unique(array_filter(explode("\n",file_get_contents("/tmp/input"))
 
 function grep($regex){
     global $input;
-    preg_match_all("/$regex/", implode(' ',$input),$matches);
-    $input = $matches[1];
+    $result = [];
+    foreach($input as $line){
+        preg_match_all("/$regex/", $line, $matches);
+        if(!empty($matches[1])){
+            $result = [...$result, ...$matches[1]];
+        }
+    }
+    $input = $result;
 }
 
 foreach(str_split(getenv('p')) as $flag){
     switch($flag){
         case 'd':
             grep('\b(\d+)\b');
-        break;
-        case 'w':
-            grep('\b(\w+)\b');
         break;
         case 'q':
             grep('["\'](.*?)["\']');
@@ -29,6 +32,10 @@ foreach(str_split(getenv('p')) as $flag){
 
 $input = array_filter(array_unique($input));
 
-file_put_contents($data_dir.'/input.json', $js=jsonstr($input));
+if($delete=getenv('d')){
+    $input = array_diff($input,explode(',',$delete));
+}
+
+file_put_contents($data_dir.'/input.json', $js=jsonstr(array_values($input)));
 
 echo $js."\n";
