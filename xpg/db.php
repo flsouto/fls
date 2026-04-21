@@ -198,12 +198,12 @@ function upsert(string $table, array $data, array $where) {
         implode(' AND ', $whereParts)
     );
 
-    $id = queryValue($sql, $where);
+    $id = qval($sql, $where);
 
     if ($id) {
         unset($data['id']);
-        return updateRow($table, $data, $where);
+        return update($table, $data, $where);
     } else {
-        return insertRow($table, array_merge($data, $where));
+        return insert($table, array_merge($data, $where));
     }
 }
