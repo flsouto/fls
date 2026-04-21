@@ -1,4 +1,5 @@
 dir=$FLS_PATH/xpg
+data_dir=${XPG_DATA_DIR:-data}
 
 alias find='php $dir/find.php'
 alias tab='php $dir/tabs.php'
@@ -13,6 +14,7 @@ alias our='php $dir/our.php'
 alias rels='php $dir/rels.php'
 alias tables='php $dir/tables.php'
 
+
 script() {
     LAST_SCRIPT=$dir/data/script$1.php
     if [[ ! -f "$LAST_SCRIPT" ]]; then
@@ -24,15 +26,15 @@ script() {
 
 input() {
     echo "" > /tmp/input
-    echo "" > $dir/data/input.json
+    echo "" > $data_dir/input.json
     nano /tmp/input
     if jq -e . /tmp/input >/dev/null 2>&1; then
-      mv /tmp/input $dir/data/input.json
+      mv /tmp/input $data_dir/input.json
     else
-      jq -R . /tmp/input | jq -s . > $dir/data/input.json
+      jq -R . /tmp/input | jq -s . > $data_dir/input.json
     fi
     
-    cat $dir/data/input.json
+    cat $data_dir/input.json
 }
 
 ifind() {

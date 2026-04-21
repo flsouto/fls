@@ -30,7 +30,6 @@ function find(string $table, $terms, $columns=null): array {
         foreach($terms as $term){
             $conditions[] = "\"$col\"::text ILIKE ?";
             $params[] = "%$term%";
-
         }
     }
 
