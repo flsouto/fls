@@ -57,3 +57,28 @@ function isjson($table,$col){
     global $schema;
     return str_starts_with($schema['types'][$table][$col]??'', 'json');
 }
+
+function findtbl($table){
+
+    global $schema;
+
+    if(!isset($schema['types'][$table])){
+        $matches = [];
+        foreach($schema['types'] as $k=>$v){
+            if(strtolower($table)==strtolower($k)){
+                $matches = [$k];
+                break;
+            }
+            if(stristr($k,$table)){
+                $matches[] = $k;
+            }
+        }
+        if(count($matches) > 1){
+            die("No table '$table'. Found matches: ".implode(', ', $matches)."\n");
+        }
+        $table = $matches[0];
+        echo "Resolved table: $table\n";
+    }
+    return $table;
+
+}

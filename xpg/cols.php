@@ -2,7 +2,9 @@
 
 require_once(__DIR__.'/boot.php');
 
-foreach($schema['types'][$argv[1]??$tab['table']] as $k => $v){
+$table = $argv[1] ? findtbl($argv[1]) : $tab['table'];
+
+foreach($schema['types'][$table] as $k => $v){
     echo "- $k: $v\n";
 }
 

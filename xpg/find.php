@@ -70,22 +70,7 @@ if(stristr($argv[1],'.')){
 }
 
 
-if(!isset($schema['types'][$table])){
-    $matches = [];
-    foreach($schema['types'] as $k=>$v){
-        if(strtolower($table)==strtolower($k)){
-            $matches = [$k];
-            break;
-        }
-        if(stristr($k,$table)){
-            $matches[] = $k;
-        }
-    }
-    if(count($matches) > 1){
-        die("No table '$table'. Found matches: ".implode(', ', $matches)."\n");
-    }
-    $table = $matches[0];
-}
+$table = findtbl($table);
 
 $rows = find($table,$search,$col);
 

@@ -2,11 +2,12 @@
 
 require_once(__DIR__."/boot.php");
 
+$table = findtbl($argv[1]);
 
 if(empty($argv[2])){
     $fks = [];
     foreach($schema['relations'] as $rel){
-        if($argv[1] == $rel['child'] && $rel['parent']==$tab['table']){
+        if($table == $rel['child'] && $rel['parent']==$tab['table']){
             $fks[] = $rel['fk'];
         }
     }
@@ -19,11 +20,11 @@ if(empty($argv[2])){
 }
 
 $ids = array_column($tab['data'],'id');
-$query = sprintf('SELECT id FROM "%s" WHERE "%s" IN(?)',$argv[1],$fk);
+$query = sprintf('SELECT id FROM "%s" WHERE "%s" IN(?)',$table,$fk);
 $rows = query($query, [$ids]);
 if(empty($rows)){
     die("No children found in $argv[1]\n");
 }
 
-newtab($argv[1],$rows,$argv[1].' of '.$tab['name']);
+newtab($table,$rows,$argv[1].' of '.$tab['name']);
 view();
