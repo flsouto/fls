@@ -25,11 +25,14 @@ function find(string $table, $terms, $columns=null): array {
     // Build WHERE conditions
     $conditions = [];
     $params = [];
-
-    foreach ($columns as $i => $col) {
-        foreach($terms as $term){
-            $conditions[] = "\"$col\"::text ILIKE ?";
-            $params[] = "%$term%";
+    if($terms[0] == 'ALL'){
+        $conditions[] = "1=1";
+    } else {
+        foreach ($columns as $i => $col) {
+            foreach($terms as $term){
+                $conditions[] = "\"$col\"::text ILIKE ?";
+                $params[] = "%$term%";
+            }
         }
     }
 
@@ -45,7 +48,6 @@ function find(string $table, $terms, $columns=null): array {
         $table,
         implode(' OR ', $conditions)
     );
-
     return query($sql, $params);
 }
 

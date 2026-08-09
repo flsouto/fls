@@ -38,6 +38,7 @@ for index, file in enumerate(files):
     locate_and_click('track_name.png')
 
     pyautogui.write(clean_track_name(file))
+    sleep(1)
     pyautogui.press('tab')
 
     sleep(rand(15,20))

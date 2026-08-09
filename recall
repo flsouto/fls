@@ -1,8 +1,6 @@
 #!/bin/bash
-
 # Define the storage directory
 STORAGE_DIR="$HOME/.recall"
-
 # Create the directory if it doesn't exist
 mkdir -p "$STORAGE_DIR"
 
@@ -10,9 +8,22 @@ mkdir -p "$STORAGE_DIR"
 store_val() {
     local key="$1"
     local value="$2"
-
     # Save the password to a file
     echo "$value" > "$STORAGE_DIR/$key"
+    if [ -d "$STORAGE_DIR/.git" ]; then
+        (cd $STORAGE_DIR; ga $key; gp)
+    fi
+}
+
+# Function to store a file's contents directly (binary-safe, no ARG_MAX limit)
+store_from_file() {
+    local key="$1"
+    local filepath="$2"
+    if [[ ! -f "$filepath" ]]; then
+        echo "File not found: $filepath" >&2
+        return 1
+    fi
+    cat "$filepath" > "$STORAGE_DIR/$key"
     if [ -d "$STORAGE_DIR/.git" ]; then
         (cd $STORAGE_DIR; ga $key; gp)
     fi
@@ -22,7 +33,6 @@ store_val() {
 append_val() {
     local key="$1"
     local value="$2"
-
     # Append the value to a file
     echo "$value" >> "$STORAGE_DIR/$key"
     if [ -d "$STORAGE_DIR/.git" ]; then
@@ -42,7 +52,6 @@ get_val() {
     value=$(echo "$value" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
     echo -n "$value"
 }
-
 
 # Function to retrieve a password to clipboard
 retrieve_val() {
@@ -70,9 +79,12 @@ if [[ $# -eq 3 ]]; then
         $command "$value"
     elif [ "$2" = "-a" ]; then
         append_val "$1" "$3"
+    elif [ "$2" = "-f" ]; then
+        store_from_file "$1" "$3"
     else
         echo "Usage: recall key -c <command>"
         echo "       recall key -a <value>"
+        echo "       recall key -f <filepath>"
         exit 1
     fi
 elif [[ $# -eq 2 ]]; then
@@ -89,4 +101,5 @@ else
     echo "       recall key -o"
     echo "       recall key -c <command>"
     echo "       recall key -a <value>"
+    echo "       recall key -f <filepath>"
 fi

@@ -16,6 +16,7 @@ alias tables='php $dir/tables.php'
 alias update='php $dir/update.php'
 alias del='php $dir/del.php'
 alias keep='php $dir/keep.php'
+alias counts='php $dir/counts.php'
 
 script() {
     LAST_SCRIPT=$data_dir/script$1.php

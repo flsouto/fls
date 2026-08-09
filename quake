@@ -1,1 +1,1 @@
-flatpak run net.sourceforge.quakespasm.Quakespasm -game $1 | grep -iP 'map:|viewpos' >> $QUAKE_PATH/$1/log
+flatpak run net.sourceforge.quakespasm.Quakespasm -game "$1" ${2:+ +map "$2"} | grep -iP 'map:|viewpos' >> "$QUAKE_PATH/$1/log"

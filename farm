@@ -58,6 +58,9 @@ x() {
     cp "$target_file" "$stash_dir/$1x${md5}.${ext}"
     cp "$target_file" "$commit_dir/$1x${md5}.${ext}"
     echo "Commited with x prefix: $commit_dir/$1x${md5}.${ext}"
+    if [[ -n on_commit ]]; then
+        $on_commit $1x${md5}.${ext}
+    fi
 }
 
 xx() { x 2; }
